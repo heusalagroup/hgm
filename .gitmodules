@@ -1,0 +1,4 @@
+[submodule "src/fi/hg/ts"]
+	path = src/fi/hg/ts
+	url = git@github.com:sendanor/typescript.git
+	branch = main
