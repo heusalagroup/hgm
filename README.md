@@ -1,21 +1,13 @@
 # @heusalagroup/submodule
 
-### Start the server in development mode
+### Install the command globally
 
 ```
-npm start
+npm i -g @heusalagroup/submodule
 ```
 
-### Build the server
+### Use it
 
 ```
-npm run build
+submodule URL [PATH [BRANCH]]
 ```
-
-### Start the server in production mode
-
-```
-npm run start-prod
-```
-
-...and open http://0.0.0.0:3000

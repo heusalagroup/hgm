@@ -1,4 +1,4 @@
-// Copyright (c) 2022. Heusala Group Ltd <info@heusalagroup.fi>. All rights reserved.
+// Copyright (c) 2022. Heusala Group <info@heusalagroup.fi>. All rights reserved.
 
 import { ProcessUtils } from "./fi/hg/core/ProcessUtils";
 
