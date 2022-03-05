@@ -12,7 +12,7 @@ In reality, it is just a smarter command line interface to manage Git's SubModul
 npm i -g @heusalagroup/hgm
 ```
 
-### Install as a git submodule to ./src/fi/hg/core
+### Install [fi.hg.core](https://github.com/heusalagroup/fi.hg.core) as a git submodule to ./src/fi/hg/core
 
 ```shell
 hgm update fi.hg.core
