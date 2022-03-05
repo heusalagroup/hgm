@@ -234,7 +234,9 @@ export async function gitPullWithRecurseSubmodules (
 ) : Promise<CommandExitStatus> {
 
     LOG.debug(`gitPullWithRecurseSubmodules`, dir);
-    const {stdout, stderr} = await doExec([ DEFAULT_GIT_COMMAND, 'pull', '--recurse-submodules' ], {
+    const {stdout, stderr} = await doExec(
+        [ DEFAULT_GIT_COMMAND, 'pull', '--recurse-submodules' ],
+        {
         cwd: dir,
         stdio: "pipe"
     });
