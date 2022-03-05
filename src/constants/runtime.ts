@@ -12,3 +12,4 @@ export const COMMAND_NAME    : string   = parseNonEmptyString(process?.env?.COMM
 export const DEFAULT_GIT_URL_BASE : string = 'git@github.com';
 export const DEFAULT_GIT_MODULES_FILE_NAME : string = '.gitmodules';
 export const DEFAULT_SOURCE_DIRECTORY : string = 'src';
+export const DEFAULT_GIT_COMMAND : string = 'git';

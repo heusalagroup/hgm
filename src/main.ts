@@ -4,7 +4,7 @@ import { promises as fs, Stats } from "fs";
 import path from "path";
 import { ProcessUtils } from "./fi/hg/core/ProcessUtils";
 import {
-    COMMAND_NAME,
+    COMMAND_NAME, DEFAULT_GIT_COMMAND,
     DEFAULT_GIT_MODULES_FILE_NAME,
     DEFAULT_GIT_URL_BASE, DEFAULT_SOURCE_DIRECTORY,
     LOG_LEVEL
@@ -18,6 +18,12 @@ import { ParsedCommandArgumentStatus } from "./fi/hg/core/cmd/types/ParsedComman
 import { Headers } from "./fi/hg/core/request/Headers";
 import { BUILD_USAGE_URL, BUILD_WITH_FULL_USAGE } from "./constants/build";
 import { doExec } from "./doExec";
+import JsonAny from "./fi/hg/core/Json";
+import {
+    HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME,
+    WELL_KNOWN_HG_METADATA_SERVICE_END_POINT
+} from "./fi/hg/core/constants/wellKnown";
+import { has, isObject, isString } from "./fi/hg/core/modules/lodash";
 
 // Must be first import to define environment variables before anything else
 ProcessUtils.initEnvFromDefaultFiles();
@@ -65,11 +71,11 @@ export async function main (
             case 'i':
             case 'update':
             case 'install':
-                return await doUpdate(freeArgs);
+                return await hgmUpdate(freeArgs);
 
             case 'r':
             case 'remove':
-                return await doRemove(freeArgs);
+                return await hgmRemove(freeArgs);
 
         }
 
@@ -82,30 +88,27 @@ export async function main (
 
 }
 
-export async function doUpdate ( freeArgs : string[] ) : Promise<CommandExitStatus> {
+export async function hgmUpdate (freeArgs : string[] ) : Promise<CommandExitStatus> {
 
     const sourceUrl  : string | undefined = freeArgs.shift();
 
     if (!sourceUrl) {
-        return await doUpdateAll(freeArgs);
+        return await hgmUpdateAll(process.cwd(), freeArgs);
     }
 
     const targetPath : string | undefined = freeArgs.shift();
     const branch     : string | undefined = sourceUrl.substring(1).includes('@') ? sourceUrl.substring(1).split('@').pop() : undefined;
 
-    if ( !sourceUrl ) {
-        return CommandExitStatus.ARGUMENT_PARSE_ERROR;
-    }
-
     return await updateSubModule(sourceUrl, targetPath, branch);
 
 }
 
-export async function doUpdateAll ( freeArgs : string[] ) : Promise<CommandExitStatus> {
-    return await initAllSubmodules();
+export async function hgmUpdateAll (dir: string, freeArgs : string[] ) : Promise<CommandExitStatus> {
+    // FIXME: Handle update for rest of freeArgs
+    return await initAllSubmodules( dir );
 }
 
-export async function doRemove ( freeArgs : string[] ) : Promise<CommandExitStatus> {
+export async function hgmRemove (freeArgs : string[] ) : Promise<CommandExitStatus> {
     return CommandExitStatus.UNIMPLEMENTED_FEATURE;
 }
 
@@ -161,8 +164,10 @@ export async function updateSubModule (
     const isDirectory : boolean = stats?.isDirectory() ?? false;
     LOG.debug(`isDirectory: `, isDirectory);
 
+    // We'll update or initialize the submodule now
     if (isDirectory) {
-        LOG.debug(`Target directory already exists: `, targetPath);
+        LOG.debug(`Target directory already exists, we'll only update: `, targetPath);
+        await gitPullWithRecurseSubmodules(relativeTargetPath);
     } else if (stats === undefined || isFile === undefined) {
         await addGitSubModule(gitUrl, relativeTargetPath);
         LOG.debug(`Initialized: `, gitUrl, relativeTargetPath);
@@ -171,6 +176,7 @@ export async function updateSubModule (
         return CommandExitStatus.CONFLICT;
     }
 
+    // Next we'll check that the branch is correct
     const nextBranch = branch ?? 'main';
     LOG.debug(`nextBranch: `, nextBranch);
 
@@ -183,6 +189,10 @@ export async function updateSubModule (
         LOG.debug(`Branch already identical: `, nextBranch);
     }
 
+    // Now let's verify there isn't any submodules that we need to initialize
+    await hgmUpdateAll(targetPath, []);
+
+    // Everything ok!
     console.info(`${packageName}@${nextBranch}:${relativeTargetPath}`);
     return CommandExitStatus.OK;
 
@@ -195,7 +205,7 @@ export async function getGitBranch (
     LOG.debug(`getGitBranch: `, targetPath );
 
     const {stdout} = await doExec(
-        [ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' ],
+        [ DEFAULT_GIT_COMMAND, 'rev-parse', '--abbrev-ref', 'HEAD' ],
         {
             cwd: targetPath,
             stdio : 'pipe'
@@ -208,28 +218,40 @@ export async function getGitBranch (
 
 }
 
-export async function initAllSubmodules () : Promise<CommandExitStatus> {
+export async function initAllSubmodules (dir : string) : Promise<CommandExitStatus> {
     LOG.debug(`initAllSubmodules`);
-    await gitPull();
-    await gitSubmoduleUpdateWithInit();
+    await gitPullWithRecurseSubmodules(dir);
+    await gitSubmoduleUpdateWithInit(dir);
     return CommandExitStatus.OK;
 }
 
-export async function gitPull () : Promise<CommandExitStatus> {
-    LOG.debug(`gitPull`);
-    await doExec([ 'git', 'pull' ]);
+export async function gitPullWithRecurseSubmodules (
+    dir : string
+) : Promise<CommandExitStatus> {
+    LOG.debug(`gitPullWithRecurseSubmodules`, dir);
+    const {stdout, stderr} = await doExec([ DEFAULT_GIT_COMMAND, 'pull', '--recurse-submodules' ], {
+        cwd: dir,
+        stdio: "pipe"
+    });
+
+    if (stderr) {
+        LOG.error(`${dir}: 'git pull --recurse-submodules' with errors: ${stderr}`);
+    } else if (stdout !== "Already up to date.") {
+        LOG.debug(`${dir}: 'git pull --recurse-submodules' with output: ${stdout}`)
+    }
+
     return CommandExitStatus.OK;
 }
 
 export async function gitPush () : Promise<CommandExitStatus> {
     LOG.debug(`gitPush`);
-    await doExec([ 'git', 'push' ]);
+    await doExec([ DEFAULT_GIT_COMMAND, 'push' ]);
     return CommandExitStatus.OK;
 }
 
-export async function gitSubmoduleUpdateWithInit () : Promise<CommandExitStatus> {
+export async function gitSubmoduleUpdateWithInit (dir: string) : Promise<CommandExitStatus> {
     LOG.debug(`gitSubmoduleUpdate`);
-    await doExec([ 'git', 'submodule', 'update', '--init' ]);
+    await doExec([ DEFAULT_GIT_COMMAND, 'submodule', 'update', '--init', '--recursive' ], {cwd: dir});
     return CommandExitStatus.OK;
 }
 
@@ -238,7 +260,7 @@ export async function addGitSubModule (
     targetPath : string
 ) : Promise<CommandExitStatus> {
     LOG.debug(`addGitSubModule: `, gitUrl, targetPath );
-    await doExec([ 'git', 'submodule', 'add', gitUrl, targetPath ]);
+    await doExec([ DEFAULT_GIT_COMMAND, 'submodule', 'add', gitUrl, targetPath ]);
     return CommandExitStatus.OK;
 }
 
@@ -248,7 +270,7 @@ export async function setGitSubModuleBranch (
 ) : Promise<CommandExitStatus> {
     LOG.debug(`setGitSubModuleBranch: `, targetPath, branch );
     const key = `submodule.${targetPath}.branch`;
-    await doExec([ 'git', 'config', '-f', DEFAULT_GIT_MODULES_FILE_NAME, key, branch ]);
+    await doExec([ DEFAULT_GIT_COMMAND, 'config', '-f', DEFAULT_GIT_MODULES_FILE_NAME, key, branch ]);
     return CommandExitStatus.OK;
 }
 
@@ -298,6 +320,15 @@ export async function parseGitUrl (
 
 }
 
+export function getScopePrefix (name : string) : string {
+    return name.toLowerCase().split('.').slice(0, 2).join('.');
+}
+
+export function getDomainNameFromScope (name : string) : string {
+    const [tld, domain] = name.toLowerCase().split('.').slice(0, 2);
+    return domain && tld ? [domain, tld].join('.') : tld;
+}
+
 /**
  * Get the git organization name from a package name.
  *
@@ -306,27 +337,43 @@ export async function parseGitUrl (
  *
  * @param name
  */
-export async function getGitOrganization (name : string) : Promise<string|undefined> {
+export async function getGitOrganization (packageName : string) : Promise<string|undefined> {
 
-    switch ( name.toLowerCase().split('.').slice(0, 2).join('.') ) {
+    const wellKnownUrl : string = getWellKnownHgMetaUrlFromScope(packageName);
+    const data : any = await RequestClient.getJson(wellKnownUrl);
 
-        case 'fi.hg':
-        case 'fi.heusalagroup':
-            return 'heusalagroup';
-
-        case 'fi.hangovergames':
-        case 'fi.palvelinkauppa':
-            return 'hangovergames';
-
-        case 'fi.nor':
-        case 'fi.sendanor':
-            return 'sendanor';
-
-        default:
-            return undefined;
-
+    if ( !data || !isObject(data) ) {
+        return undefined;
     }
 
+    // Search package based option
+    let packageMetadata : any = data && has(data, packageName) ? data[packageName] : undefined;
+    if (packageMetadata && isObject(packageMetadata) && has(packageMetadata, HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME)) {
+        const githubOrgName : string | undefined = packageMetadata[HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME];
+        if (isString(githubOrgName)) return githubOrgName;
+    }
+
+    // Search root scope based option
+    const scopeName = getScopePrefix(packageName);
+    packageMetadata = data && has(data, scopeName) ? data[scopeName] : undefined;
+    if (packageMetadata && isObject(packageMetadata) && has(packageMetadata, HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME)) {
+        const githubOrgName : string | undefined = packageMetadata[HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME];
+        if (isString(githubOrgName)) return githubOrgName;
+    }
+
+    // Search root option
+    if (has(data, HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME)) {
+        const githubOrgName : string | undefined = data[HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME];
+        if (isString(githubOrgName)) return githubOrgName;
+    }
+
+    return undefined;
+
+}
+
+export function getWellKnownHgMetaUrlFromScope (name : string) {
+    const domain = getDomainNameFromScope(name);
+    return `https://${domain}/${WELL_KNOWN_HG_METADATA_SERVICE_END_POINT}`;
 }
 
 /**
@@ -345,18 +392,21 @@ export function getMainUsage (
 
 Manage git submodule states.
 
-  hgm update [NAME] [ TARGET-PATH ]
-  hgm remove NAME [ TARGET-PATH ]
+  hgm update [ --path=TARGET-PATH ] [NAME]
+  hgm remove [ --path=TARGET-PATH ] NAME
   
 ...where NAME is one of:
 
-  git@github.com:ORG/NAME
-  [@]ORG/NAME
-  NAME
+  git@github.com:ORG/NAME[@BRANCH]
+  [@]ORG/NAME[@BRANCH]
+  NAME[@BRANCH]
     
 ...where NAME may be:
 
    fi.hg.FOO which will default to Heusala Group's github org as "heusalagroup/fi.hg.FOO"
+    
+   Note! Currently these organization mappings are hard coded, but we'll implement a way to
+   register your own. Owning a prefix is possible by owning a domain like our "hg.fi".
     
 ...where BRANCH defaults to "main"
   

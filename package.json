@@ -1,7 +1,7 @@
 {
   "name": "@heusalagroup/hgm",
-  "version": "0.0.2",
-  "description": "hgm -- Git SubModule Manager",
+  "version": "0.0.4",
+  "description": "hgm -- Package Manager for Git SubModules",
   "main": "./dist/hgm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
