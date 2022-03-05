@@ -1,8 +1,8 @@
 # @heusalagroup/hgm
 
-This is Heusala Group's module manager.
+This is Heusala Group's git module manager.
 
-In reality, it is just a smarter command line interface to manage Git's SubModules.
+In reality, it is just a smarter command line interface to use Git's SubModules.
 
 *Note!* It's still quite experimental and in active development.
 
