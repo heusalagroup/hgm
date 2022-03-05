@@ -344,7 +344,7 @@ process.on("SIGTERM",e("SIGTERM")),process.on("SIGINT",e("SIGINT")),process.on("
 "SIGUSR2",e("SIGUSR2")),process.on("uncaughtException",e("uncaughtException"))}static _printErrors(e,t){try{t?ts.error(
 `Closing process because "${e}" event: `,t):ts.error(`Closing process because "${e}" event`)}catch(e){console.error(
 "Error while printing errors: ",e)}}}Z("0.0.1"),ga=null!=(T=Z(""))?T:"hgm",I=null!=(b=Z(""))?b:"",Z("production"),Z(
-"2022-03-04T23:58:14.490Z"),"".startsWith("%{")&&"".endsWith("}"),E=null!=(P=function(e){if(e){if(function(){switch(e){
+"2022-03-05T00:09:50.168Z"),"".startsWith("%{")&&"".endsWith("}"),E=null!=(P=function(e){if(e){if(function(){switch(e){
 case u.DEBUG:case u.INFO:case u.WARN:case u.ERROR:case u.NONE:return 1;default:return}}())return e;switch(e=(""+e
 ).toUpperCase()){case"ALL":case"DEBUG":return u.DEBUG;case"INFO":return u.INFO;case"WARN":case"WARNING":return u.WARN;
 case"ERR":case"ERROR":return u.ERROR;case"FALSE":case"OFF":case"QUIET":case"SILENT":case"NONE":return u.NONE;default:

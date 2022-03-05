@@ -1,6 +1,6 @@
 # @heusalagroup/hgm
 
-This is HG's command line (Git) Submodule Manager.
+This is Heusala Group's command line (Git Submodule) Manager.
 
 ### Install the command globally
 

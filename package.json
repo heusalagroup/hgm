@@ -1,7 +1,7 @@
 {
   "name": "@heusalagroup/hgm",
   "version": "0.0.1",
-  "description": "HGM -- Git SubModule Manager",
+  "description": "hgm -- Git SubModule Manager",
   "main": "./dist/hgm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -27,7 +27,6 @@
     "url": "https://github.com/heusalagroup/hgm/issues"
   },
   "homepage": "https://github.com/heusalagroup/hgm#readme",
-  "private": true,
   "bin": {
     "hgm": "./dist/hgm.js"
   },
