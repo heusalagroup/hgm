@@ -9,3 +9,6 @@ import {
 
 export const LOG_LEVEL       : LogLevel = parseLogLevel(parseNonEmptyString(process?.env?.LOG_LEVEL) ?? parseNonEmptyString(BUILD_LOG_LEVEL)) ?? LogLevel.INFO ;
 export const COMMAND_NAME    : string   = parseNonEmptyString(process?.env?.COMMAND_NAME)            ?? BUILD_COMMAND_NAME;
+export const DEFAULT_GIT_URL_BASE : string = 'git@github.com';
+export const DEFAULT_GIT_MODULES_FILE_NAME : string = '.gitmodules';
+export const DEFAULT_SOURCE_DIRECTORY : string = 'src';
