@@ -26,7 +26,7 @@ git submodule add git@github.com:heusalagroup/fi.hg.core.git src/fi/hg/core
 git config -f .gitmodules submodule.src/fi/hg/core.branch main
 ```
 
-...except it can detect state and only updates what is changed.
+...except it can detect state and only execute steps which are needed.
 
 The `hgm install` is same as `hgm update`.
 
