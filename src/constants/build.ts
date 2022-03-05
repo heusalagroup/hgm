@@ -31,7 +31,7 @@ export const BUILD_VERSION : string  = /* @__PURE__ */parseNonEmptyString('%{BUI
 /**
  * @__PURE__
  */
-export const BUILD_COMMAND_NAME : string  = /* @__PURE__ */parseNonEmptyString('%{BUILD_COMMAND_NAME}') ?? 'hg-command';
+export const BUILD_COMMAND_NAME : string  = /* @__PURE__ */parseNonEmptyString('%{BUILD_COMMAND_NAME}') ?? 'hgm';
 
 /**
  * @__PURE__

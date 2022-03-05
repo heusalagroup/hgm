@@ -29,6 +29,6 @@
 
   },
   "include": [
-    "./src/submodule.ts"
+    "./src/hgm.ts"
   ]
 }
