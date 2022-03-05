@@ -1,22 +1,31 @@
 # @heusalagroup/hgm
 
-This is Heusala Group's command line (Git Submodule) Manager.
+This is Heusala Group's module manager.
 
-### Install the command globally
+In reality, it is just a smarter command line interface to manage Git's SubModules.
 
-```
+*Note!* It's still quite experimental and in active development.
+
+### Install the command globally from NPM
+
+```shell
 npm i -g @heusalagroup/hgm
 ```
 
-### ...and use it
+### Install as a git submodule to ./src/fi/hg/core
 
+```shell
+hgm update fi.hg.core
 ```
-hgm PATH [URL [BRANCH]]
+
+### Install as a git submodule to ./fi/hg/core
+
+```shell
+hgm update fi.hg.core fi/hg/core
 ```
 
-* The `PATH` is the local directory for the module.
-* The `URL` is either `git@host:path`. 
-  If the name is `organization/name`, then it's converted to `git@github.com:organization/name.git`.
-* The `BRANCH` is the branch to use. It defaults to `main`.
+### Update all local git submodules
 
-The command will update the git module state to match provided.
+```shell
+hgm update
+```
