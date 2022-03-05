@@ -313,7 +313,7 @@ process.on("SIGTERM",e("SIGTERM")),process.on("SIGINT",e("SIGINT")),process.on("
 "SIGUSR2",e("SIGUSR2")),process.on("uncaughtException",e("uncaughtException"))}static _printErrors(e,t){try{t?is.error(
 `Closing process because "${e}" event: `,t):"exit"===e?is.debug(`Closing process because "${e}" event`):is.info(
 `Closing process because "${e}" event`)}catch(e){console.error("Error while printing errors: ",e)}}}ee("0.0.4"),
-ya=null!=(T=ee(""))?T:"hgm",j=null!=(b=ee(""))?b:"",ee("production"),ee("2022-03-05T16:15:46.579Z"),"".startsWith("%{"
+ya=null!=(T=ee(""))?T:"hgm",j=null!=(b=ee(""))?b:"",ee("production"),ee("2022-03-05T16:18:44.551Z"),"".startsWith("%{"
 )&&"".endsWith("}"),E=null!=(P=function(e){if(e){if(function(){switch(e){case u.DEBUG:case u.INFO:case u.WARN:
 case u.ERROR:case u.NONE:return 1;default:return}}())return e;switch(e=(""+e).toUpperCase()){case"ALL":case"DEBUG":
 return u.DEBUG;case"INFO":return u.INFO;case"WARN":case"WARNING":return u.WARN;case"ERR":case"ERROR":return u.ERROR;
@@ -681,27 +681,28 @@ const t=e.shift();if(!t)return he(process.cwd());var e=e.shift(),r=t.substring(1
 packageName:s}=await async function(e){if(G.debug("getGitUrl: sourceUrl = ",e),e.includes(":"))return G.debug(
 "getGitUrl: direct url: ",e),{gitUrl:e,packageName:e.replace(/\.git$/,"").split(":").slice(1).join(":").split("/"
 ).slice(1).join("/")};if((e=e.startsWith("@")?e.substring(1):e).includes("/")){const r=ss+`:${e}.git`;return G.debug(
-"getGitUrl: github with org: ",r),{gitUrl:r,packageName:e.split("/").slice(1).join("/")}}const t=await async function(t
-){var r,n=t,i="https://"+function(){const[e,t]=n.toLowerCase().split(".").slice(0,2);return t&&e?[t,e].join("."):e}(
+"getGitUrl: github with org: ",r),{gitUrl:r,packageName:e.split("/").slice(1).join("/")}}var t=await async function(t){
+var r,n=t,i="https://"+function(){const[e,t]=n.toLowerCase().split(".").slice(0,2);return t&&e?[t,e].join("."):e}(
 )+"/.well-known/fi.hg.m.json",i=(G.debug("getGitOrganization: wellKnownUrl = ",i),await _s.getJson(i));if(G.debug(
 "getGitOrganization: data = ",i),i&&Q(i)){let e=i&&To(i,t)?i[t]:void 0;return G.debug(
 "getGitOrganization: packageMetadata = ",e),e&&Q(e)&&To(e,wu)&&(r=e[wu],G.debug(
 "getGitOrganization: package: githubOrgName = ",r),H(r))?r:(r=t.toLowerCase().split(".").slice(0,2).join("."),e=i&&To(i,
 r)?i[r]:void 0,G.debug("getGitOrganization: packageMetadata = ",e),e&&Q(e)&&To(e,wu)&&(t=e[wu],G.debug(
 "getGitOrganization: scope: githubOrgName = ",t),H(t))?t:To(i,wu)&&(r=i[wu],G.debug(
-"getGitOrganization: root: githubOrgName = ",r),H(r))?r:void 0)}}(e),r=ss+`:${t}/`+e;return G.debug(
-`getGitUrl: github with org "${t}": `,r),{gitUrl:r,packageName:e}}(e);if(!a)throw new TypeError(
-`Could not detect git url for: "${a}"`);G.debug("updateSubModule: gitUrl = ",a),G.debug(
-"updateSubModule: packageName = ",s),t=t||ka.default.resolve(ka.default.resolve(o,"src"),s.split(".").join("/")),
-e=ka.default.relative(process.cwd(),t),G.debug("relativeTargetPath = ",e);let u;try{u=await xa.promises.stat(t),G.debug(
-"stats: ",u)}catch(e){"ENOENT"!==(null==e?void 0:e.code)&&G.error("File stat error: ",t,e),u=void 0}if(i=null!=(
-i=null==(i=u)?void 0:i.isFile())&&i,G.debug("isFile: ",i),n=null!=(n=null==(n=u)?void 0:n.isDirectory())&&n,G.debug(
-"isDirectory: ",n),n)G.debug("Target directory already exists, we'll only update: ",t),await ge(e);else{if(
-void 0!==u&&void 0!==i)return G.error("Target file not a directory: ",t),Ho.CONFLICT;n=a,i=e,G.debug("addGitSubModule: "
-,n,i),await pe([us,"submodule","add",n,i]),await Ho.OK,G.debug("Initialized: ",a,e)}return n=null!=r?r:"main",G.debug(
-"nextBranch: ",n),i=e,G.debug("getGitBranch: ",i),r=(await pe([us,"rev-parse","--abbrev-ref","HEAD"],{cwd:i,stdio:"pipe"
-})).stdout,G.debug("stdout: ",r),i=await r,G.debug("currentBranch: ",i),i!==n?(r=e,i=n,G.debug("setGitSubModuleBranch: "
-,r,i),await me(r,"branch",i)):G.debug("Branch already identical: ",n),r=e,i=a,G.debug("setGitSubModuleUrl: ",r,i),
-await me(r,"url",i),await he(t),console.info(s+`@${n}:`+e),Ho.OK}(t,e,r)}(o);case"r":case"remove":return o,
-await Ho.UNIMPLEMENTED_FEATURE}return Ho.UNKNOWN_ARGUMENT}catch(e){return G.error("Fatal error: ",e),Ho.FATAL_ERROR}}(
-process.argv).then(e=>{process.exit(e)}).catch(e=>{console.error("Error: ",e),process.exit(1)});
+"getGitOrganization: root: githubOrgName = ",r),H(r))?r:void 0)}}(e);if(!t)throw new TypeError(
+"No Github organization configured for: "+e);const r=ss+`:${t}/`+e;return G.debug(`getGitUrl: github with org "${t}": `,
+r),{gitUrl:r,packageName:e}}(e);if(!a)throw new TypeError(`Could not detect git url for: "${a}"`);G.debug(
+"updateSubModule: gitUrl = ",a),G.debug("updateSubModule: packageName = ",s),t=t||ka.default.resolve(ka.default.resolve(
+o,"src"),s.split(".").join("/")),e=ka.default.relative(process.cwd(),t),G.debug("relativeTargetPath = ",e);let u;try{
+u=await xa.promises.stat(t),G.debug("stats: ",u)}catch(e){"ENOENT"!==(null==e?void 0:e.code)&&G.error(
+"File stat error: ",t,e),u=void 0}if(i=null!=(i=null==(i=u)?void 0:i.isFile())&&i,G.debug("isFile: ",i),n=null!=(
+n=null==(n=u)?void 0:n.isDirectory())&&n,G.debug("isDirectory: ",n),n)G.debug(
+"Target directory already exists, we'll only update: ",t),await ge(e);else{if(void 0!==u&&void 0!==i)return G.error(
+"Target file not a directory: ",t),Ho.CONFLICT;n=a,i=e,G.debug("addGitSubModule: ",n,i),await pe([us,"submodule","add",n
+,i]),await Ho.OK,G.debug("Initialized: ",a,e)}return n=null!=r?r:"main",G.debug("nextBranch: ",n),i=e,G.debug(
+"getGitBranch: ",i),r=(await pe([us,"rev-parse","--abbrev-ref","HEAD"],{cwd:i,stdio:"pipe"})).stdout,G.debug("stdout: ",
+r),i=await r,G.debug("currentBranch: ",i),i!==n?(r=e,i=n,G.debug("setGitSubModuleBranch: ",r,i),await me(r,"branch",i)
+):G.debug("Branch already identical: ",n),r=e,i=a,G.debug("setGitSubModuleUrl: ",r,i),await me(r,"url",i),await he(t),
+console.info(s+`@${n}:`+e),Ho.OK}(t,e,r)}(o);case"r":case"remove":return o,await Ho.UNIMPLEMENTED_FEATURE}
+return Ho.UNKNOWN_ARGUMENT}catch(e){return G.error("Fatal error: ",e),Ho.FATAL_ERROR}}(process.argv).then(e=>{
+process.exit(e)}).catch(e=>{console.error("Error: ",e),process.exit(1)});
