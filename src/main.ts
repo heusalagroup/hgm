@@ -189,6 +189,8 @@ export async function updateSubModule (
         LOG.debug(`Branch already identical: `, nextBranch);
     }
 
+    await setGitSubModuleUrl(relativeTargetPath, gitUrl);
+
     // Now let's verify there isn't any submodules that we need to initialize
     await hgmUpdateAll(targetPath, []);
 
@@ -264,13 +266,30 @@ export async function addGitSubModule (
     return CommandExitStatus.OK;
 }
 
+export async function setGitSubModuleUrl (
+    targetPath : string,
+    url        : string
+) : Promise<CommandExitStatus> {
+    LOG.debug(`setGitSubModuleUrl: `, targetPath, url );
+    return await setGitSubModuleConfig(targetPath, 'url', url);
+}
+
 export async function setGitSubModuleBranch (
     targetPath : string,
     branch     : string
 ) : Promise<CommandExitStatus> {
     LOG.debug(`setGitSubModuleBranch: `, targetPath, branch );
-    const key = `submodule.${targetPath}.branch`;
-    await doExec([ DEFAULT_GIT_COMMAND, 'config', '-f', DEFAULT_GIT_MODULES_FILE_NAME, key, branch ]);
+    return await setGitSubModuleConfig(targetPath, 'branch', branch);
+}
+
+export async function setGitSubModuleConfig (
+    targetPath : string,
+    key   : string,
+    value : string
+) : Promise<CommandExitStatus> {
+    LOG.debug(`setGitSubModuleConfig: `, targetPath, key, value );
+    const fullKey = `submodule.${targetPath}.${key}`;
+    await doExec([ DEFAULT_GIT_COMMAND, 'config', '-f', DEFAULT_GIT_MODULES_FILE_NAME, fullKey, value ]);
     return CommandExitStatus.OK;
 }
 
@@ -311,6 +330,10 @@ export async function parseGitUrl (
 
     // Handle names without the git org like "fi.hg.core"
     const gitOrg = await getGitOrganization(sourceUrl);
+    if (!gitOrg) {
+        throw new TypeError(`No Github organization configured for: ${sourceUrl}`);
+    }
+
     const gitUrl = `${DEFAULT_GIT_URL_BASE}:${gitOrg}/${sourceUrl}`
     LOG.debug(`getGitUrl: github with org "${gitOrg}": `, gitUrl);
     return {
@@ -335,12 +358,14 @@ export function getDomainNameFromScope (name : string) : string {
  * This is implemented as a async method for future use -- we'll use an online service for this
  * later.
  *
- * @param name
+ * @param packageName
  */
 export async function getGitOrganization (packageName : string) : Promise<string|undefined> {
 
     const wellKnownUrl : string = getWellKnownHgMetaUrlFromScope(packageName);
+    LOG.debug(`getGitOrganization: wellKnownUrl = `, wellKnownUrl);
     const data : any = await RequestClient.getJson(wellKnownUrl);
+    LOG.debug(`getGitOrganization: data = `, data);
 
     if ( !data || !isObject(data) ) {
         return undefined;
@@ -348,22 +373,27 @@ export async function getGitOrganization (packageName : string) : Promise<string
 
     // Search package based option
     let packageMetadata : any = data && has(data, packageName) ? data[packageName] : undefined;
+    LOG.debug(`getGitOrganization: packageMetadata = `, packageMetadata);
     if (packageMetadata && isObject(packageMetadata) && has(packageMetadata, HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME)) {
         const githubOrgName : string | undefined = packageMetadata[HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME];
+        LOG.debug(`getGitOrganization: package: githubOrgName = `, githubOrgName);
         if (isString(githubOrgName)) return githubOrgName;
     }
 
     // Search root scope based option
     const scopeName = getScopePrefix(packageName);
     packageMetadata = data && has(data, scopeName) ? data[scopeName] : undefined;
+    LOG.debug(`getGitOrganization: packageMetadata = `, packageMetadata);
     if (packageMetadata && isObject(packageMetadata) && has(packageMetadata, HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME)) {
         const githubOrgName : string | undefined = packageMetadata[HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME];
+        LOG.debug(`getGitOrganization: scope: githubOrgName = `, githubOrgName);
         if (isString(githubOrgName)) return githubOrgName;
     }
 
     // Search root option
     if (has(data, HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME)) {
         const githubOrgName : string | undefined = data[HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME];
+        LOG.debug(`getGitOrganization: root: githubOrgName = `, githubOrgName);
         if (isString(githubOrgName)) return githubOrgName;
     }
 
@@ -373,7 +403,7 @@ export async function getGitOrganization (packageName : string) : Promise<string
 
 export function getWellKnownHgMetaUrlFromScope (name : string) {
     const domain = getDomainNameFromScope(name);
-    return `https://${domain}/${WELL_KNOWN_HG_METADATA_SERVICE_END_POINT}`;
+    return `https://${domain}${WELL_KNOWN_HG_METADATA_SERVICE_END_POINT}`;
 }
 
 /**
