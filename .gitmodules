@@ -1,3 +1,4 @@
 [submodule "src/fi/hg/core"]
 	branch = main
-	url = git@github.com:heusalagroup/fi.hg.core
+	url = git@github.com:heusalagroup/fi.hg.core.git
+	path = src/fi/hg/core

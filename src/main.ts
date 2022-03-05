@@ -23,7 +23,7 @@ import {
     HG_METADATA_SERVICE_GITHUB_ORGANIZATION_NAME,
     WELL_KNOWN_HG_METADATA_SERVICE_END_POINT
 } from "./fi/hg/core/constants/wellKnown";
-import { has, isObject, isString } from "./fi/hg/core/modules/lodash";
+import { has, isObject, isString, trim } from "./fi/hg/core/modules/lodash";
 
 // Must be first import to define environment variables before anything else
 ProcessUtils.initEnvFromDefaultFiles();
@@ -191,6 +191,8 @@ export async function updateSubModule (
 
     await setGitSubModuleUrl(relativeTargetPath, gitUrl);
 
+    await setGitSubModulePath(relativeTargetPath, relativeTargetPath);
+
     // Now let's verify there isn't any submodules that we need to initialize
     await hgmUpdateAll(targetPath, []);
 
@@ -230,6 +232,7 @@ export async function initAllSubmodules (dir : string) : Promise<CommandExitStat
 export async function gitPullWithRecurseSubmodules (
     dir : string
 ) : Promise<CommandExitStatus> {
+
     LOG.debug(`gitPullWithRecurseSubmodules`, dir);
     const {stdout, stderr} = await doExec([ DEFAULT_GIT_COMMAND, 'pull', '--recurse-submodules' ], {
         cwd: dir,
@@ -237,9 +240,11 @@ export async function gitPullWithRecurseSubmodules (
     });
 
     if (stderr) {
-        LOG.error(`${dir}: 'git pull --recurse-submodules' with errors: ${stderr}`);
-    } else if (stdout !== "Already up to date.") {
-        LOG.debug(`${dir}: 'git pull --recurse-submodules' with output: ${stdout}`)
+        LOG.error(`${dir}: 'git pull --recurse-submodules' with errors (inside "${dir}"): ${trim(stderr)}`);
+    }
+
+    if (!stdout.includes("Already up to date.")) {
+        LOG.debug(`${dir}: 'git pull --recurse-submodules' with output (inside "${dir}"): ${trim(stdout)}`)
     }
 
     return CommandExitStatus.OK;
@@ -272,6 +277,14 @@ export async function setGitSubModuleUrl (
 ) : Promise<CommandExitStatus> {
     LOG.debug(`setGitSubModuleUrl: `, targetPath, url );
     return await setGitSubModuleConfig(targetPath, 'url', url);
+}
+
+export async function setGitSubModulePath (
+    targetPath : string,
+    path        : string
+) : Promise<CommandExitStatus> {
+    LOG.debug(`setGitSubModuleUrl: `, targetPath, path );
+    return await setGitSubModuleConfig(targetPath, 'path', path);
 }
 
 export async function setGitSubModuleBranch (
@@ -334,7 +347,7 @@ export async function parseGitUrl (
         throw new TypeError(`No Github organization configured for: ${sourceUrl}`);
     }
 
-    const gitUrl = `${DEFAULT_GIT_URL_BASE}:${gitOrg}/${sourceUrl}`
+    const gitUrl = `${DEFAULT_GIT_URL_BASE}:${gitOrg}/${sourceUrl}.git`
     LOG.debug(`getGitUrl: github with org "${gitOrg}": `, gitUrl);
     return {
         gitUrl: gitUrl,

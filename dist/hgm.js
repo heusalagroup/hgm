@@ -27,7 +27,7 @@ case Jo.PUT:return"put";case Jo.DELETE:return"delete";case Jo.PATCH:return"patch
 n=void 0,i=void 0]=[e,X(re,$)];return!!a(e)&&(t=null!=(t=null==e?void 0:e.length)?t:0,!(void 0!==n&&t<n)&&!(
 void 0!==i&&i<t)&&(void 0===r||J(e,r)))}function ie(t,e){var r,n=Object.keys(t);return Object.getOwnPropertySymbols&&(
 r=Object.getOwnPropertySymbols(t),e&&(r=r.filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable})),
-n.push.apply(n,r)),n}function y(n){for(var i,e=1;e<arguments.length;e++)i=null!=arguments[e]?arguments[e]:{},e%2?ie(
+n.push.apply(n,r)),n}function b(n){for(var i,e=1;e<arguments.length;e++)i=null!=arguments[e]?arguments[e]:{},e%2?ie(
 Object(i),!0).forEach(function(e){var t=n,r=i[e];e in t?Object.defineProperty(t,e,{value:r,enumerable:!0,
 configurable:!0,writable:!0}):t[e]=r}):Object.getOwnPropertyDescriptors?Object.defineProperties(n,
 Object.getOwnPropertyDescriptors(i)):ie(Object(i)).forEach(function(e){Object.defineProperty(n,e,
@@ -44,19 +44,19 @@ new Error(`${t} ${e.command} ENOENT`),{code:"ENOENT",errno:"ENOENT",syscall:t+" 
 spawnargs:e.args})}function ce(e,t){return Bs&&1===e&&!t.file?ue(t.original,"spawn"):null}function le(e,t,r){
 return e=Ee(e,t,r),t=zs.spawn(e.command,e.args,e.options),$s.hookChildProcess(t,e),t}function de(e={}){var{
 env:e=process.env,platform:t=process.platform}=e;return"win32"!==t?"PATH":Object.keys(e).reverse().find(
-e=>"PATH"===e.toUpperCase())||"Path"}async function fe(n,u){if(!n)throw new Error("Expected a stream");const i=(u=y({
-maxBuffer:1/0},u)).maxBuffer,o=(e=>{const t=(e=y({},u)).array;let r=e.encoding;const n="buffer"===r;let i=!1;t?i=!(r||n
+e=>"PATH"===e.toUpperCase())||"Path"}async function fe(n,u){if(!n)throw new Error("Expected a stream");const i=(u=b({
+maxBuffer:1/0},u)).maxBuffer,o=(e=>{const t=(e=b({},u)).array;let r=e.encoding;const n="buffer"===r;let i=!1;t?i=!(r||n
 ):r=r||"utf8",n&&(r=null);const o=new iu({objectMode:i});r&&o.setEncoding(r);let a=0;const s=[];return o.on("data",e=>{
 s.push(e),i?a=s.length:a+=e.length}),o.getBufferedValue=()=>t?s:n?Buffer.concat(s,a):s.join(""),o.getBufferedLength=(
 )=>a,o})();return await new Promise((e,t)=>{const r=e=>{e&&o.getBufferedLength()<=ou.MAX_LENGTH&&(
 e.bufferedData=o.getBufferedValue()),t(e)};(async()=>{try{await su(n,o),e()}catch(e){r(e)}})(),o.on("data",()=>{
 o.getBufferedLength()>i&&r(new uu)})}),o.getBufferedValue()}async function pe(e,t){var r=e.shift(),p=d({stdio:"inherit"}
 ,null!=t?t:{}),{stdout:t,stderr:r}=(Ou.debug("Executing: ",r,e),await function(t,e){var n,r,i,o,a;[r,i,o={}]=[t,e,p],r=(
-a=ea._parse(r,i,o)).command,i=a.args,o=a.options,(o=y({maxBuffer:bu,buffer:!0,stripFinalNewline:!0,extendEnv:!0,
+a=ea._parse(r,i,o)).command,i=a.args,o=a.options,(o=b({maxBuffer:yu,buffer:!0,stripFinalNewline:!0,extendEnv:!0,
 preferLocal:!1,localDir:o.cwd||Ha.default.cwd(),execPath:Ha.default.execPath,encoding:"utf8",reject:!0,cleanup:!0,
 all:!1,windowsHide:!0},o)).env=_u(o),o.stdio=tu(o),"win32"===Ha.default.platform&&"cmd"===$a.default.basename(r,".exe"
 )&&i.unshift("/q");const s={file:r,args:i,options:o,parsed:a},u=(r=t,i=e,gu(r,i).join(" ")),c=(o=t,a=e,gu(o,a).map(
-e=>yu(e)).join(" "));if(void 0!==(r=s.options.timeout)&&(!Number.isFinite(r)||r<0))throw new TypeError(
+e=>bu(e)).join(" "));if(void 0!==(r=s.options.timeout)&&(!Number.isFinite(r)||r<0))throw new TypeError(
 `Expected the \`timeout\` option to be a non-negative integer, got \`${r}\` (${typeof r})`);let l;try{
 l=Va.default.spawn(s.file,s.args,s.options)}catch(e){return i=new Va.default.ChildProcess,t=Promise.reject(Zs({error:e,
 stdout:"",stderr:"",all:"",command:u,escapedCommand:c,parsed:s,timedOut:!1,isCanceled:!1,killed:!1})),hu(i,t)}n=l,
@@ -78,14 +78,15 @@ null!==i&&"object"==typeof i&&"function"==typeof i.pipe?i.pipe(r.stdin):r.stdin.
 e.stdout||e.stderr)){const r=ga();return e.stdout&&r.add(e.stdout),e.stderr&&r.add(e.stderr),r}})(l,s.options),hu(l,a)}(
 r,e));return{stdout:t,stderr:r}}async function he(e){return G.debug("initAllSubmodules"),await ge(e),G.debug(
 "gitSubmoduleUpdate"),await pe([us,"submodule","update","--init","--recursive"],{cwd:e}),await Ho.OK,Ho.OK}
-async function ge(e){G.debug("gitPullWithRecurseSubmodules",e);var{stdout:t,stderr:r}=await pe([us,"pull",
-"--recurse-submodules"],{cwd:e,stdio:"pipe"});return r?G.error(e+": 'git pull --recurse-submodules' with errors: "+r
-):"Already up to date."!==t&&G.debug(e+": 'git pull --recurse-submodules' with output: "+t),Ho.OK}async function me(e,t,
-r){return G.debug("setGitSubModuleConfig: ",e,t,r),e=`submodule.${e}.`+t,await pe([us,"config","-f",".gitmodules",e,r]),
-Ho.OK}function ve(e,t){return{name:"SIGRT"+(t+1),number:Xs+t,action:"terminate",
-description:"Application-specific signal (realtime)",standard:"posix"}}function ye(){var e=65-Xs,e=Array.from({length:e}
-,ve);return[...Qs,...e].map(Oe)}function be(e,{name:t,number:r,description:n,supported:i,action:o,forced:a,standard:s}){
-return y(y({},e),{},{[t]:{name:t,number:r,description:n,supported:i,action:o,forced:a,standard:s}})}function _e(e){
+async function ge(e){G.debug("gitPullWithRecurseSubmodules",e);const{stdout:t,stderr:r}=await pe([us,"pull",
+"--recurse-submodules"],{cwd:e,stdio:"pipe"});return r&&G.error(
+e+`: 'git pull --recurse-submodules' with errors (inside "${e}"): `+r),t.includes("Already up to date.")||G.debug(
+e+`: 'git pull --recurse-submodules' with output (inside "${e}"): `+t),Ho.OK}async function me(e,t,r){return G.debug(
+"setGitSubModuleConfig: ",e,t,r),e=`submodule.${e}.`+t,await pe([us,"config","-f",".gitmodules",e,r]),Ho.OK}function ve(
+e,t){return{name:"SIGRT"+(t+1),number:Xs+t,action:"terminate",description:"Application-specific signal (realtime)",
+standard:"posix"}}function be(){var e=65-Xs,e=Array.from({length:e},ve);return[...Qs,...e].map(Oe)}function ye(e,{
+name:t,number:r,description:n,supported:i,action:o,forced:a,standard:s}){return b(b({},e),{},{[t]:{name:t,number:r,
+description:n,supported:i,action:o,forced:a,standard:s}})}function _e(e){
 return e&&"object"==typeof e&&"function"==typeof e.removeListener&&"function"==typeof e.emit&&"function"==typeof e.reallyExit&&"function"==typeof e.listeners&&"function"==typeof e.kill&&"number"==typeof e.pid&&"function"==typeof e.on
 }function Ee(e,t,r){if(t&&!Array.isArray(t)&&(r=t,t=null),e={command:e,args:t=t?t.slice(0):[],options:r=Object.assign({}
 ,r),file:void 0,original:{command:e,args:t}},r.shell)return e;if(t=e,!Ds)return t;if((r=t).file=Fs(r),e=(
@@ -98,14 +99,14 @@ description:r,action:n,forced:i=!1,standard:o}){var{signals:{[e]:a}}=Ma.constant
 number:s?a:t,description:r,supported:s,action:n,forced:i,standard:o}}function we(e,t){for(var r=-1,n=null==e?0:e.length,
 i=Array(n);++r<n;)i[r]=t(e[r],r,e);return i}function Re(e,t){return e===t||e!=e&&t!=t}function Te(e,t){for(
 var r=e.length;r--;)if(Xa(e[r][0],t))return r;return-1}var Se,Ne,Ae,Pe,xe,je,Ie,Le,Ce,Ge,Ue,Fe,Me,De,qe,ke,Be,ze,$e,Ve,
-He,We,Je,Ke,Xe,Qe,Ye,Ze,et,tt,rt,nt,it,ot,at,st,ut,ct,lt,dt,ft,pt,ht,gt,mt,vt,yt,bt,_t,Et,a,Ot,wt,Rt,Tt,St,Nt,At,Pt,xt,
+He,We,Je,Ke,Xe,Qe,Ye,Ze,et,tt,rt,nt,it,ot,at,st,ut,ct,lt,dt,ft,pt,ht,gt,mt,vt,bt,yt,_t,Et,a,Ot,wt,Rt,Tt,St,Nt,At,Pt,xt,
 jt,It,Lt,Ct,Gt,t,Ut,Ft,Mt,Dt,qt,kt,Bt,zt,$t,Vt,Ht,Wt,Jt,Kt,Xt,Qt,Yt,Zt,er,tr,rr,nr,ir,or,ar,sr,ur,cr,lr,dr,fr,pr,hr,gr,
-mr,vr,yr,br,_r,Er,Or,wr,Rr,Tr,Sr,Nr,Ar,Pr,xr,jr,Ir,Lr,Cr,Gr,Ur,Fr,Mr,Dr,qr,kr,Br,zr,$r,Vr,Hr,Wr,Jr,Kr,Xr,Qr,Yr,Zr,en,tn,
-rn,nn,on,an,sn,un,cn,ln,dn,fn,pn,hn,gn,mn,r,vn,yn,bn,_n,En,On,wn,Rn,Tn,Sn,Nn,An,Pn,xn,jn,In,Ln,Cn,Gn,Un,Fn,Mn,Dn,qn,kn,
-Bn,zn,$n,Vn,Hn,Wn,Jn,Kn,Xn,Qn,Yn,Zn,ei,ti,ri,ni,ii,oi,ai,si,ui,ci,li,di,fi,pi,hi,gi,mi,vi,yi,bi,_i,Ei,Oi,wi,Ri,Ti,Si,Ni,
+mr,vr,br,yr,_r,Er,Or,wr,Rr,Tr,Sr,Nr,Ar,Pr,xr,jr,Ir,Lr,Cr,Gr,Ur,Fr,Mr,Dr,qr,kr,Br,zr,$r,Vr,Hr,Wr,Jr,Kr,Xr,Qr,Yr,Zr,en,tn,
+rn,nn,on,an,sn,un,cn,ln,dn,fn,pn,hn,gn,mn,r,vn,bn,yn,_n,En,On,wn,Rn,Tn,Sn,Nn,An,Pn,xn,jn,In,Ln,Cn,Gn,Un,Fn,Mn,Dn,qn,kn,
+Bn,zn,$n,Vn,Hn,Wn,Jn,Kn,Xn,Qn,Yn,Zn,ei,ti,ri,ni,ii,oi,ai,si,ui,ci,li,di,fi,pi,hi,gi,mi,vi,bi,yi,_i,Ei,Oi,wi,Ri,Ti,Si,Ni,
 Ai,Pi,xi,ji,Ii,Li,Ci,Gi,Ui,Fi,Mi,Di,qi,ki,Bi,zi,$i,Vi,Hi,Wi,Ji,Ki,Xi,Qi,Yi,Zi,eo,to,ro,no,io,oo,ao,n,i,s,so,uo,co,lo,fo,
-po,ho,go,mo,vo,yo,bo,_o,Eo,Oo,wo,Ro,To,So,No,Ao,Po,xo,jo,Io,Lo,Co,Go,Uo,Fo,Mo,Do,qo,ko,Bo,zo,$o,Vo,u,c,Ho,Wo,Jo,l,Ko,Xo,
-f,Qo,Yo,Zo,p,ea,h,g,ta,ra,na,m,ia,oa,aa,sa,ua,ca,la,da,fa,pa,ha,ga,v,b,ma,va,_,ya,E,O,ba,_a,w,R,T,S,Ea,Oa,wa,N,Ra,Ta,Sa,
+po,ho,go,mo,vo,bo,yo,_o,Eo,Oo,wo,Ro,To,So,No,Ao,Po,xo,jo,Io,Lo,Co,Go,Uo,Fo,Mo,Do,qo,ko,Bo,zo,$o,Vo,u,c,Ho,Wo,Jo,l,Ko,Xo,
+f,Qo,Yo,Zo,p,ea,h,g,ta,ra,na,m,ia,oa,aa,sa,ua,ca,la,da,fa,pa,ha,ga,v,y,ma,va,_,ba,E,O,ya,_a,w,R,T,S,Ea,Oa,wa,N,Ra,Ta,Sa,
 Na,Aa,Pa,xa=require("fs"),ja=require("path"),Ia=require("querystring"),La=require("url"),Ca=require("node:buffer"),
 Ga=require("node:path"),Ua=require("node:child_process"),Fa=require("node:process"),A=require("child_process"),
 P=require("node:url"),Ma=require("os"),x=require("node:os"),Da=require("assert"),j=require("events"),I=require("buffer")
@@ -150,18 +151,18 @@ this.size=n.size,this},k.prototype.clear=P,k.prototype.delete=s,k.prototype.get=
 x=k,ft=r,Da=function(e){return this.__data__.has(e)},B.prototype.add=B.prototype.push=function(e){
 return this.__data__.set(e,"__lodash_hash_undefined__"),this},B.prototype.has=Da,pt=B,ht=j=function(e,t){for(var r=-1,
 n=null==e?0:e.length;++r<n;)if(t(e[r],r,e))return!0;return!1},gt=function(e,t){return e.has(t)},P=C.Uint8Array,mt=P,
-vt=Re,yt=s=function(e,t,r,n,i,o){var a,s,u,c,l,d,f,p=1&r,h=e.length,g=t.length;if(h!=g&&!(p&&h<g))return!1;if(g=o.get(e)
+vt=Re,bt=s=function(e,t,r,n,i,o){var a,s,u,c,l,d,f,p=1&r,h=e.length,g=t.length;if(h!=g&&!(p&&h<g))return!1;if(g=o.get(e)
 ,a=o.get(t),g&&a)return g==t&&a==e;for(s=-1,u=!0,c=2&r?new pt:void 0,o.set(e,t),o.set(t,e);++s<h;){if(l=e[s],d=t[s],
 void 0!==(f=n?p?n(d,l,s,t,e,o):n(l,d,s,e,t,o):f)){if(f)continue;u=!1;break}if(c){if(!ht(t,function(e,t){if(!gt(c,t)&&(
 l===e||i(l,e,r,n,o)))return c.push(t)})){u=!1;break}}else if(l!==d&&!i(l,d,r,n,o)){u=!1;break}}return o.delete(e),
-o.delete(t),u},bt=function(e){var r=-1,n=Array(e.size);return e.forEach(function(e,t){n[++r]=[t,e]}),n},_t=n=function(e
+o.delete(t),u},yt=function(e){var r=-1,n=Array(e.size);return e.forEach(function(e,t){n[++r]=[t,e]}),n},_t=n=function(e
 ){var t=-1,r=Array(e.size);return e.forEach(function(e){r[++t]=e}),r},T=L?L.prototype:void 0,Et=T?T.valueOf:void 0,
 A=function(e,t,r,n,i,o,a){var s,u;switch(r){case"[object DataView]":if(
 e.byteLength!=t.byteLength||e.byteOffset!=t.byteOffset)return!1;e=e.buffer,t=t.buffer;case"[object ArrayBuffer]":
 return!(e.byteLength!=t.byteLength||!o(new mt(e),new mt(t)));case"[object Boolean]":case"[object Date]":
 case"[object Number]":return vt(+e,+t);case"[object Error]":return e.name==t.name&&e.message==t.message;
-case"[object RegExp]":case"[object String]":return e==t+"";case"[object Map]":s=bt;case"[object Set]":return s=s||_t,!!(
-e.size==t.size||1&n)&&((u=a.get(e))?u==t:(n|=2,a.set(e,t),u=yt(s(e),s(t),n,i,o,a),a.delete(e),u));case"[object Symbol]":
+case"[object RegExp]":case"[object String]":return e==t+"";case"[object Map]":s=yt;case"[object Set]":return s=s||_t,!!(
+e.size==t.size||1&n)&&((u=a.get(e))?u==t:(n|=2,a.set(e,t),u=bt(s(e),s(t),n,i,o,a),a.delete(e),u));case"[object Symbol]":
 if(Et)return Et.call(e)==Et.call(t)}return!1},Da=function(e,t){for(var r=-1,n=t.length,i=e.length;++r<n;)e[i+r]=t[r];
 return e},P=Array.isArray,Ot=Da,wt=a=P,T=function(e,t,r){return t=t(e),wt(e)?t:Ot(t,r(e))},Rt=P=function(e,t){for(var r,
 n=-1,i=null==e?0:e.length,o=0,a=[];++n<i;)t(r=e[n],n,e)&&(a[o++]=r);return a},R=Object.prototype,
@@ -169,18 +170,18 @@ Tt=R.propertyIsEnumerable,R=(St=Object.getOwnPropertySymbols)?function(t){return
 function(e){return Tt.call(t,e)}))}:function(){return[]},Ri=function(e,t){for(var r=-1,n=Array(e);++r<e;)n[r]=t(r);
 return n},Nt=p,w=function(e){return At(e)&&"[object Arguments]"==Nt(e)},Pt=At=_a=function(e){
 return null!=e&&"object"==typeof e},f=Object.prototype,xt=f.hasOwnProperty,jt=f.propertyIsEnumerable,f=w(function(){
-return arguments}())?w:function(e){return Pt(e)&&xt.call(e,"callee")&&!jt.call(e,"callee")},E=(ba=(ba=(E=(E=(w={
-exports:{}}).exports)&&!E.nodeType&&E)&&w&&!w.nodeType&&w)&&ba.exports===E?C.Buffer:void 0)?ba.isBuffer:void 0,
-w.exports=E||function(){return!1},It=/^(?:0|[1-9]\d*)$/,ba=function(e,t){var r=typeof e;return!!(
+return arguments}())?w:function(e){return Pt(e)&&xt.call(e,"callee")&&!jt.call(e,"callee")},E=(ya=(ya=(E=(E=(w={
+exports:{}}).exports)&&!E.nodeType&&E)&&w&&!w.nodeType&&w)&&ya.exports===E?C.Buffer:void 0)?ya.isBuffer:void 0,
+w.exports=E||function(){return!1},It=/^(?:0|[1-9]\d*)$/,ya=function(e,t){var r=typeof e;return!!(
 t=null==t?9007199254740991:t)&&("number"==r||"symbol"!=r&&It.test(e))&&-1<e&&e%1==0&&e<t},Lt=p,Ct=E=function(e){
 return"number"==typeof e&&-1<e&&e%1==0&&e<=9007199254740991},Gt=_a,(t={}
 )["[object Float32Array]"]=t["[object Float64Array]"]=t["[object Int8Array]"]=t["[object Int16Array]"]=t["[object Int32Array]"]=t["[object Uint8Array]"]=t["[object Uint8ClampedArray]"]=t["[object Uint16Array]"]=t["[object Uint32Array]"]=!0
 ,
 t["[object Arguments]"]=t["[object Array]"]=t["[object ArrayBuffer]"]=t["[object Boolean]"]=t["[object DataView]"]=t["[object Date]"]=t["[object Error]"]=t["[object Function]"]=t["[object Map]"]=t["[object Number]"]=t["[object Object]"]=t["[object RegExp]"]=t["[object Set]"]=t["[object String]"]=t["[object WeakMap]"]=!1
-,N=function(e){return Gt(e)&&Ct(e.length)&&!!t[Lt(e)]},ya=function(t){return function(e){return t(e)}},_=(_=(b=Ut={
-exports:{}}).exports)&&!_.nodeType&&_,_=(ma=_&&b&&!b.nodeType&&b)&&ma.exports===_,va=_&&I.process,_=function(){try{
-return ma&&ma.require&&ma.require("util").types||va&&va.binding&&va.binding("util")}catch(e){}}(),b.exports=_,_=(b=(
-I=Ut.exports)&&I.isTypedArray)?ya(b):N,Ft=Ri,Mt=f,Dt=a,qt=w.exports,kt=ba,Bt=I=_,b=Object.prototype,zt=b.hasOwnProperty,
+,N=function(e){return Gt(e)&&Ct(e.length)&&!!t[Lt(e)]},ba=function(t){return function(e){return t(e)}},_=(_=(y=Ut={
+exports:{}}).exports)&&!_.nodeType&&_,_=(ma=_&&y&&!y.nodeType&&y)&&ma.exports===_,va=_&&I.process,_=function(){try{
+return ma&&ma.require&&ma.require("util").types||va&&va.binding&&va.binding("util")}catch(e){}}(),y.exports=_,_=(y=(
+I=Ut.exports)&&I.isTypedArray)?ba(y):N,Ft=Ri,Mt=f,Dt=a,qt=w.exports,kt=ya,Bt=I=_,y=Object.prototype,zt=y.hasOwnProperty,
 $t=Object.prototype,Ta=Object.keys,Sa=Object,Vt=function(e){var t=e&&e.constructor;return e===(
 "function"==typeof t&&t.prototype||$t)},Ht=function(e){return Ta(Sa(e))},N=Object.prototype,Wt=N.hasOwnProperty,Jt=Fe,
 Kt=E,Xt=function(e,t){var r,n=Dt(e),i=!n&&Mt(e),o=!n&&!i&&qt(e),a=!n&&!i&&!o&&Bt(e),s=n||i||o||a,u=s?Ft(e.length,String
@@ -188,23 +189,23 @@ Kt=E,Xt=function(e,t){var r,n=Dt(e),i=!n&&Mt(e),o=!n&&!i&&qt(e),a=!n&&!i&&!o&&Bt
 "buffer"==r||"byteLength"==r||"byteOffset"==r)||kt(r,c))||u.push(r);return u},Qt=function(e){var t,r;if(!Vt(e)
 )return Ht(e);for(r in t=[],Object(e))Wt.call(e,r)&&"constructor"!=r&&t.push(r);return t},Yt=Ri=function(e){
 return null!=e&&Kt(e.length)&&!Jt(e)},Zt=T,er=R,tr=_=function(e){return(Yt(e)?Xt:Qt)(e)},rr=function(e){return Zt(e,tr,
-er)},b=Object.prototype,nr=b.hasOwnProperty,N=function(e,t,r,n,i,o){var a,s,u,c,l,d,f,p,h,g=1&r,m=rr(e),v=m.length;if(
+er)},y=Object.prototype,nr=y.hasOwnProperty,N=function(e,t,r,n,i,o){var a,s,u,c,l,d,f,p,h,g=1&r,m=rr(e),v=m.length;if(
 v!=rr(t).length&&!g)return!1;for(a=v;a--;)if(s=m[a],!(g?s in t:nr.call(t,s)))return!1;if(p=o.get(e),h=o.get(t),p&&h
 )return p==t&&h==e;for(u=!0,o.set(e,t),o.set(t,e),c=g;++a<v;){if(l=e[s=m[a]],d=t[s],!(void 0===(f=n?g?n(d,l,s,t,e,o):n(l
 ,d,s,e,t,o):f)?l===d||i(l,d,r,n,o):f)){u=!1;break}c=c||"constructor"==s}return u&&!c&&(p=e.constructor)!=(
 h=t.constructor)&&"constructor"in e&&"constructor"in t&&!(
 "function"==typeof p&&p instanceof p&&"function"==typeof h&&h instanceof h)&&(u=!1),o.delete(e),o.delete(t),u},T=S(C,
-"DataView"),R=i,b=S(C,"Promise"),h=i=S(C,"Set"),C=S(C,"WeakMap"),ir=p,ar=(or=v)(v=T),sr=or(R),ur=or(b),cr=or(h),lr=or(C)
-,T=ir,(v&&"[object DataView]"!=T(new v(new ArrayBuffer(1)))||R&&"[object Map]"!=T(new R)||b&&"[object Promise]"!=T(
-b.resolve())||h&&"[object Set]"!=T(new h)||C&&"[object WeakMap]"!=T(new C))&&(T=function(e){var t=ir(e);if(e=(
+"DataView"),R=i,y=S(C,"Promise"),h=i=S(C,"Set"),C=S(C,"WeakMap"),ir=p,ar=(or=v)(v=T),sr=or(R),ur=or(y),cr=or(h),lr=or(C)
+,T=ir,(v&&"[object DataView]"!=T(new v(new ArrayBuffer(1)))||R&&"[object Map]"!=T(new R)||y&&"[object Promise]"!=T(
+y.resolve())||h&&"[object Set]"!=T(new h)||C&&"[object WeakMap]"!=T(new C))&&(T=function(e){var t=ir(e);if(e=(
 e="[object Object]"==t?e.constructor:void 0)?or(e):"")switch(e){case ar:return"[object DataView]";case sr:
 return"[object Map]";case ur:return"[object Promise]";case cr:return"[object Set]";case lr:return"[object WeakMap]"}
-return t}),dr=x,fr=s,pr=A,hr=N,gr=T,mr=a,vr=w.exports,yr=I,br="[object Arguments]",_r="[object Array]",
+return t}),dr=x,fr=s,pr=A,hr=N,gr=T,mr=a,vr=w.exports,br=I,yr="[object Arguments]",_r="[object Array]",
 Er="[object Object]",v=Object.prototype,Or=v.hasOwnProperty,wr=function(e,t,r,n,i,o){var a=mr(e),s=mr(t),u=a?_r:gr(e),
-s=s?_r:gr(t),c=(u=u==br?Er:u)==Er,l=(s=s==br?Er:s)==Er;if((s=u==s)&&vr(e)){if(!vr(t))return!1;c=!(a=!0)}return s&&!c?(
-o=o||new dr,a||yr(e)?fr(e,t,r,n,i,o):pr(e,t,u,r,n,i,o)):1&r||(a=c&&Or.call(e,"__wrapped__"),u=l&&Or.call(t,"__wrapped__"
+s=s?_r:gr(t),c=(u=u==yr?Er:u)==Er,l=(s=s==yr?Er:s)==Er;if((s=u==s)&&vr(e)){if(!vr(t))return!1;c=!(a=!0)}return s&&!c?(
+o=o||new dr,a||br(e)?fr(e,t,r,n,i,o):pr(e,t,u,r,n,i,o)):1&r||(a=c&&Or.call(e,"__wrapped__"),u=l&&Or.call(t,"__wrapped__"
 ),!a&&!u)?s&&(o=o||new dr,hr(e,t,r,n,i,o)):i(a?e.value():e,u?t.value():t,r,n,o=o||new dr)},Tr=x,Sr=R=function e(t,r,n,i,
-o){return t===r||(null==t||null==r||!Rr(t)&&!Rr(r)?t!=t&&r!=r:wr(t,r,n,i,e,o))},Nr=Ce,Ar=b=function(e){return e==e&&!Nr(
+o){return t===r||(null==t||null==r||!Rr(t)&&!Rr(r)?t!=t&&r!=r:wr(t,r,n,i,e,o))},Nr=Ce,Ar=y=function(e){return e==e&&!Nr(
 e)},Pr=_,xr=function(e,t,r,n){var i,o,a,s,u,c,l=r.length,d=l,f=!n;if(null==e)return!d;for(e=Object(e);l--;)if(i=r[l],
 f&&i[2]?i[1]!==e[i[0]]:!(i[0]in e))return!1;for(;++l<d;)if(a=e[o=(i=r[l])[0]],s=i[1],f&&i[2]){if(void 0===a&&!(o in e)
 )return!1}else if(u=new Tr,!(void 0===(c=n?n(a,s,o,e,t,u):c)?Sr(s,a,3,n,u):c))return!1;return!0},jr=function(e){for(
@@ -222,44 +223,44 @@ Vr=T?T.toString:void 0,Hr=w=function e(t){if("string"==typeof t)return t;if(zr(t
 tn=Yr=function(e,t){return Wr(e)?e:Jr(e,t)?[e]:Kr(Xr(e))},rn=f,an=E,un=function(e,t){return null!=e&&t in Object(e)},
 cn=v=function(e,t,r){for(var n,i,o=(t=tn(t,e)).length,a=!(n=-1);++n<o&&(i=sn(t[n]),a=null!=e&&r(e,i));)e=e[i];
 return a||++n!=o?a:!!(o=null==e?0:e.length)&&an(o)&&on(i,o)&&(nn(e)||rn(e))},ln=R,dn=function(e,t,r){return void 0===(
-e=null==e?void 0:en(e,t))?r:e},fn=function(e,t){return null!=e&&cn(e,t,un)},hn=b,gn=h,vn=en=x=function(e,t){for(var r=0,
-n=(t=Yr(t,e)).length;null!=e&&r<n;)e=e[Zr(t[r++])];return r&&r==n?e:void 0},yn=function(t){return function(e){
-return null==e?void 0:e[t]}},bn=function(t){return function(e){return vn(e,t)}},_n=pn=Jr=A,En=mn=sn=Zr=function(e){if(
+e=null==e?void 0:en(e,t))?r:e},fn=function(e,t){return null!=e&&cn(e,t,un)},hn=y,gn=h,vn=en=x=function(e,t){for(var r=0,
+n=(t=Yr(t,e)).length;null!=e&&r<n;)e=e[Zr(t[r++])];return r&&r==n?e:void 0},bn=function(t){return function(e){
+return null==e?void 0:e[t]}},yn=function(t){return function(e){return vn(e,t)}},_n=pn=Jr=A,En=mn=sn=Zr=function(e){if(
 "string"==typeof e||Qr(e))return e;var t=e+"";return"0"==t&&1/e==-1/0?"-0":t},On=C,wn=function(r,n){return pn(r)&&hn(n
 )?gn(mn(r),n):function(e){var t=dn(e,r);return void 0===t&&t===n?fn(e,r):ln(n,t,3)}},Rn=r=function(e){return e},
-Tn=nn=Wr=a,Sn=function(e){return _n(e)?yn(En(e)):bn(e)},Nn=function(e,t,r){for(var n,i=-1,o=Object(e),a=r(e),
+Tn=nn=Wr=a,Sn=function(e){return _n(e)?bn(En(e)):yn(e)},Nn=function(e,t,r){for(var n,i=-1,o=Object(e),a=r(e),
 s=a.length;s--&&!1!==t(o[n=a[++i]],n,o););return e},An=_,In=we,Cn=T=function(e,n){var i=-1,o=jn(e)?Array(e.length):[];
 return xn(e,function(e,t,r){o[++i]=n(e,t,r)}),o},Un=function(e,t){return(Gn(e)?In:Cn)(e,Ln(t))},Mn=Re,Dn=jn=Pn=Ri,
-qn=on=ba,kn=Ce,Bn=j,$n=function(e,n){var i;return Fn(e,function(e,t,r){return!(i=n(e,t,r))}),!!i},Wn=function(e,t,r){
+qn=on=ya,kn=Ce,Bn=j,$n=function(e,n){var i;return Fn(e,function(e,t,r){return!(i=n(e,t,r))}),!!i},Wn=function(e,t,r){
 var n=Vn(e)?Bn:$n;return r&&Hn(e,t,r)&&(t=void 0),n(e,zn(t))},Jn=Fn=xn=N=function(e,t){if(null==e)return e;if(!Pn(e)
 )return e&&Nn(e,t,An);for(var r=e.length,n=-1,i=Object(e);++n<r&&!1!==t(i[n],n,i););return e},Kn=function(e,t){for(
 var r=-1,n=null==e?0:e.length;++r<n;)if(!t(e[r],r,e))return!1;return!0},Xn=function(e,n){var i=!0;return Jn(e,function(e
 ,t,r){return i=!!n(e,t,r)}),i},Qn=zn=Ln=E=function(e){return"function"==typeof e?e:null==e?Rn:"object"==typeof e?Tn(e
 )?wn(e[0],e[1]):On(e):Sn(e)},Yn=Vn=Gn=a,Zn=Hn=R=function(e,t,r){if(!kn(r))return!1;var n=typeof t;return!!(
 "number"==n?Dn(r)&&qn(t,r.length):"string"==n&&t in r)&&Mn(r[t],e)},ei=function(e,t,r){var n=Yn(e)?Kn:Xn;return r&&Zn(e,
-t,r)&&(t=void 0),n(e,Qn(t))},ti=S,b=function(){try{var e=ti(Object,"defineProperty");return e({},"",{}),e}catch(e){}}(),
+t,r)&&(t=void 0),n(e,Qn(t))},ti=S,y=function(){try{var e=ti(Object,"defineProperty");return e({},"",{}),e}catch(e){}}(),
 ri=f,ni=a,ii=L?L.isConcatSpreadable:void 0,ai=function(e){return ni(e)||ri(e)||!!(ii&&e&&e[ii])},si=oi=Da,
 ui=h=function e(t,r,n,i,o){var a,s=-1,u=t.length;for(n=n||ai,o=o||[];++s<u;)a=t[s],0<r&&n(a)?1<r?e(a,r-1,n,i,o):oi(o,a
 ):i||(o[o.length]=a);return o},ci=function(e,t){var r=-1,n=e.length;for(t=t||Array(n);++r<n;)t[r]=e[r];return t},li=a,
 di=function(){var e,t,r,n=arguments.length;if(!n)return[];for(e=Array(n-1),t=arguments[0],r=n;r--;)e[r-1]=arguments[r];
 return si(li(t)?ci(t):[t],ui(e,1))},fi=/\s/,pi=function(e){for(var t=e.length;t--&&fi.test(e.charAt(t)););return t},
-hi=/^\s+/,gi=A=function(e){return e&&e.slice(0,pi(e)+1).replace(hi,"")},mi=Ce,vi=s,yi=/^[-+]0x[0-9a-f]+$/i,
-bi=/^0b[01]+$/i,_i=/^0o[0-7]+$/i,Ei=parseInt,Oi=function(e){var t;return"number"==typeof e?e:vi(e)?NaN:(mi(e)&&(
-t="function"==typeof e.valueOf?e.valueOf():e,e=mi(t)?t+"":t),"string"!=typeof e?0===e?e:+e:(e=gi(e),(t=bi.test(e)
-)||_i.test(e)?Ei(e.slice(2),t?2:8):yi.test(e)?NaN:+e))},wi=function(e){return e?(e=Oi(e)
+hi=/^\s+/,gi=A=function(e){return e&&e.slice(0,pi(e)+1).replace(hi,"")},mi=Ce,vi=s,bi=/^[-+]0x[0-9a-f]+$/i,
+yi=/^0b[01]+$/i,_i=/^0o[0-7]+$/i,Ei=parseInt,Oi=function(e){var t;return"number"==typeof e?e:vi(e)?NaN:(mi(e)&&(
+t="function"==typeof e.valueOf?e.valueOf():e,e=mi(t)?t+"":t),"string"!=typeof e?0===e?e:+e:(e=gi(e),(t=yi.test(e)
+)||_i.test(e)?Ei(e.slice(2),t?2:8):bi.test(e)?NaN:+e))},wi=function(e){return e?(e=Oi(e)
 )===1/0||e===-1/0?17976931348623157e292*(e<0?-1:1):e==e?e:0:0===e?e:0},C=function(e){var t=(e=wi(e))%1;
 return e==e?t?e-t:e:0},Ri=function(e,t,r){var n,i=-1,o=e.length;for((r=o<r?o:r)<0&&(r+=o),o=r<(t=t<0?o<-t?0:o+t:t
 )?0:r-t>>>0,t>>>=0,n=Array(o);++i<o;)n[i]=e[i+t];return n},Ti=function(e,t,r,n){for(var i=e.length,o=r+(n?1:-1
 );n?o--:++o<i;)if(t(e[o],o,e))return o;return-1},Si=function(e){return e!=e},Ni=function(e,t,r){for(var n=r-1,
-i=e.length;++n<i;)if(e[n]===t)return n;return-1},ba=function(e,t,r){return t==t?Ni(e,t,r):Ti(e,Si,r)},i&&n(new i([,-0])
+i=e.length;++n<i;)if(e[n]===t)return n;return-1},ya=function(e,t,r){return t==t?Ni(e,t,r):Ti(e,Si,r)},i&&n(new i([,-0])
 )[1],Ai=s,Pi=function(e,t){var r,n,i,o,a,s,u,c;if(e!==t){if(r=void 0!==e,n=null===e,i=e==e,o=Ai(e),a=void 0!==t,
 s=null===t,u=t==t,c=Ai(t),!s&&!c&&!o&&t<e||o&&a&&u&&!s&&!c||n&&a&&u||!r&&u||!i)return 1;if(
 !n&&!o&&!c&&e<t||c&&r&&i&&!n&&!o||s&&r&&i||!a&&i||!u)return-1}return 0},xi=we,ji=x,Ii=E,Li=T,Ci=function(e,t){
-var r=e.length;for(e.sort(t);r--;)e[r]=e[r].value;return e},Gi=ya,Ui=function(e,t,r){for(var n,i=-1,o=e.criteria,
+var r=e.length;for(e.sort(t);r--;)e[r]=e[r].value;return e},Gi=ba,Ui=function(e,t,r){for(var n,i=-1,o=e.criteria,
 a=t.criteria,s=o.length,u=r.length;++i<s;)if(n=Pi(o[i],a[i]))return u<=i?n:n*("desc"==r[i]?-1:1);return e.index-t.index}
 ,Fi=r,Mi=a,Di=function(e,t,r){switch(r.length){case 0:return e.call(t);case 1:return e.call(t,r[0]);case 2:
 return e.call(t,r[0],r[1]);case 3:return e.call(t,r[0],r[1],r[2])}return e.apply(t,r)},qi=Math.max,ki=function(e){
-return function(){return e}},j=(Bi=b)?function(e,t){return Bi(e,"toString",{configurable:!0,enumerable:!1,value:ki(t),
+return function(){return e}},j=(Bi=y)?function(e,t){return Bi(e,"toString",{configurable:!0,enumerable:!1,value:ki(t),
 writable:!0})}:r,zi=Date.now,Ea=j,$i=h,Vi=function(e,n,r){var i;return n=n.length?xi(n,function(t){return Mi(t
 )?function(e){return ji(e,1===t.length?t[0]:t)}:t}):[Fi],i=-1,n=xi(n,Gi(Ii)),e=Li(e,function(t,e,r){return{criteria:xi(n
 ,function(e){return e(t)}),index:++i,value:t}}),Ci(e,function(e,t){return Ui(e,t,r)})},Hi=R,function(){var e=zi(),
@@ -279,9 +280,9 @@ i="[\\ufe0e\\ufe0f]?(?:[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]|\\ud83c[\
 "[^\\ud800-\\udfff][\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]?","[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]",
 "(?:\\ud83c[\\udde6-\\uddff]){2}","[\\ud800-\\udbff][\\udc00-\\udfff]","[\\ud800-\\udfff]"].join("|")+")",so=RegExp(
 "\\ud83c[\\udffb-\\udfff](?=\\ud83c[\\udffb-\\udfff])|"+s+i,"g"),uo=n,co=L,lo=function(e){return e.match(so)||[]},
-po=fo=ba,ho=w,go=A,mo=f,vo=function(e,t){for(var r=e.length;r--&&-1<fo(t,e[r],0););return r},yo=function(e,t){for(
-var r=-1,n=e.length;++r<n&&-1<po(t,e[r],0););return r},bo=function(e){return(co(e)?lo:uo)(e)},_o=I,Eo=function(e,t,r){
-return(e=_o(e))&&(r||void 0===t)?go(e):e&&(t=ho(t))?(r=bo(e),e=bo(t),t=yo(r,e),e=vo(r,e)+1,mo(r,t,e).join("")):e},
+po=fo=ya,ho=w,go=A,mo=f,vo=function(e,t){for(var r=e.length;r--&&-1<fo(t,e[r],0););return r},bo=function(e,t){for(
+var r=-1,n=e.length;++r<n&&-1<po(t,e[r],0););return r},yo=function(e){return(co(e)?lo:uo)(e)},_o=I,Eo=function(e,t,r){
+return(e=_o(e))&&(r||void 0===t)?go(e):e&&(t=ho(t))?(r=yo(e),e=yo(t),t=bo(r,e),e=vo(r,e)+1,mo(r,t,e).join("")):e},
 x=Object.prototype,Oo=x.hasOwnProperty,wo=function(e,t){return null!=e&&Oo.call(e,t)},Ro=v,To=function(e,t){
 return null!=e&&Ro(e,t,wo)},Ao=function(e){return!0===e||!1===e||No(e)&&"[object Boolean]"==So(e)},Po=function(e){
 return null===e},jo=a,Lo=function(e){return"string"==typeof e||!jo(e)&&Io(e)&&"[object String]"==xo(e)},Co=xo=So=p,
@@ -313,13 +314,13 @@ process.on("SIGTERM",e("SIGTERM")),process.on("SIGINT",e("SIGINT")),process.on("
 "SIGUSR2",e("SIGUSR2")),process.on("uncaughtException",e("uncaughtException"))}static _printErrors(e,t){try{t?is.error(
 `Closing process because "${e}" event: `,t):"exit"===e?is.debug(`Closing process because "${e}" event`):is.info(
 `Closing process because "${e}" event`)}catch(e){console.error("Error while printing errors: ",e)}}}ee("0.0.4"),
-ya=null!=(T=ee(""))?T:"hgm",j=null!=(b=ee(""))?b:"",ee("production"),ee("2022-03-05T16:18:44.551Z"),"".startsWith("%{"
+ba=null!=(T=ee(""))?T:"hgm",j=null!=(y=ee(""))?y:"",ee("production"),ee("2022-03-05T16:35:43.297Z"),"".startsWith("%{"
 )&&"".endsWith("}"),E=null!=(P=function(e){if(e){if(function(){switch(e){case u.DEBUG:case u.INFO:case u.WARN:
 case u.ERROR:case u.NONE:return 1;default:return}}())return e;switch(e=(""+e).toUpperCase()){case"ALL":case"DEBUG":
 return u.DEBUG;case"INFO":return u.INFO;case"WARN":case"WARNING":return u.WARN;case"ERR":case"ERROR":return u.ERROR;
 case"FALSE":case"OFF":case"QUIET":case"SILENT":case"NONE":return u.NONE;default:return}}}(null!=(S=Y(null==(h=process
 )||null==(R=h.env)?void 0:R.LOG_LEVEL))?S:Y(j)))?P:u.INFO;const as=null!=(Ri=Y(null==(r=process)||null==(N=r.env
-)?void 0:N.COMMAND_NAME))?Ri:ya,ss="git@github.com",us="git",cs=(Wo=Ho={OK:0,0:"OK",GENERAL_ERRORS:1,1:"GENERAL_ERRORS",
+)?void 0:N.COMMAND_NAME))?Ri:ba,ss="git@github.com",us="git",cs=(Wo=Ho={OK:0,0:"OK",GENERAL_ERRORS:1,1:"GENERAL_ERRORS",
 MISUSE_OF_SHELL_BUILTINS:2,2:"MISUSE_OF_SHELL_BUILTINS",ARGUMENT_PARSE_ERROR:3,3:"ARGUMENT_PARSE_ERROR",
 UNKNOWN_ARGUMENT:4,4:"UNKNOWN_ARGUMENT",UNIMPLEMENTED_FEATURE:5,5:"UNIMPLEMENTED_FEATURE",FATAL_ERROR:6,6:"FATAL_ERROR",
 CONFLICT:7,7:"CONFLICT",USAGE:64,64:"USAGE",DATAERR:65,65:"DATAERR",NOINPUT:66,66:"NOINPUT",NOUSER:67,67:"NOUSER",
@@ -329,9 +330,9 @@ NOPERM:77,77:"NOPERM",CONFIG:78,78:"CONFIG",COMMAND_INVOKED_CANNOT_EXECUTE:126,1
 COMMAND_NOT_FOUND:127,127:"COMMAND_NOT_FOUND",INVALID_ARGUMENT_TO_EXIT:128,128:"INVALID_ARGUMENT_TO_EXIT",
 FATAL_SIGNAL_RANGE_START:129,129:"FATAL_SIGNAL_RANGE_START",FATAL_SIGNAL_RANGE_END:254,254:"FATAL_SIGNAL_RANGE_END",
 EXIT_STATUS_OUT_OF_RANGE:255,255:"EXIT_STATUS_OUT_OF_RANGE"},O=Jo={OPTIONS:0,0:"OPTIONS",GET:1,1:"GET",POST:2,2:"POST",
-PUT:3,3:"PUT",DELETE:4,4:"DELETE",PATCH:5,5:"PATCH"},"WINDOW"===(ba=null!=(L=null!=(s=null==(Ut=process)||null==(
+PUT:3,3:"PUT",DELETE:4,4:"DELETE",PATCH:5,5:"PATCH"},"WINDOW"===(ya=null!=(L=null!=(s=null==(Ut=process)||null==(
 Da=Ut.env)?void 0:Da.NOR_REQUEST_CLIENT_MODE)?s:null==(i=process)||null==(n=i.env
-)?void 0:n.REACT_APP_REQUEST_CLIENT_MODE)?L:"")||!("undefined"==typeof window||!window.fetch)),ls="NODE"===ba||!cs;
+)?void 0:n.REACT_APP_REQUEST_CLIENT_MODE)?L:"")||!("undefined"==typeof window||!window.fetch)),ls="NODE"===ya||!cs;
 class ds{static async getRequestDataAsBuffer(n){return new Promise((e,t)=>{const r=[];n.on("data",e=>{try{r.push(e)
 }catch(e){t(e)}}),n.on("end",()=>{try{e(Buffer.concat(r))}catch(e){t(e)}})})}static async getRequestDataAsString(e,
 t="utf8"){const r=await ds.getRequestDataAsBuffer(e);return r.toString(t)}static async getRequestDataAsFormUrlEncoded(e
@@ -442,15 +443,15 @@ method:"DELETE",mode:"cors",cache:"no-cache",headers:{"Content-Type":"applicatio
 return t&&(n.headers=d(d({},n.headers),t)),r&&(n.body=JSON.stringify(r)),this._fetch(e,n).then(e=>ms._successResponse(e,
 O.DELETE))}static _successResponse(e,t){const r=e.status;if(!e.ok||r<200||400<=r){const n=e.url,
 i=`${r} ${e.statusText} for ${te(t)} `+n;return e.json().then(e=>{throw new fs(r,i,t,n,e)})}return e.json()}}
-const vs=ls?require("http"):void 0,ys=ls?require("https"):void 0,bs=ns.createLogger("RequestClient");class _s{
-static setLogLevel(e){bs.setLogLevel(e),gs.setLogLevel(e)}static async jsonRequest(e,t,r,n){
+const vs=ls?require("http"):void 0,bs=ls?require("https"):void 0,ys=ns.createLogger("RequestClient");class _s{
+static setLogLevel(e){ys.setLogLevel(e),gs.setLogLevel(e)}static async jsonRequest(e,t,r,n){
 return this._client.jsonRequest(e,t,r,n)}static async getJson(e,t){return this._client.jsonRequest(O.GET,e,t)}
-static async postJson(e,t,r){return bs.debug(".postJson: ",e,t,r),this._client.jsonRequest(O.POST,e,r,t)}
-static async patchJson(e,t,r){return bs.debug(".patchJson: ",e,t,r),this._client.jsonRequest(O.PATCH,e,r,t)}
-static async putJson(e,t,r){return bs.debug(".putJson: ",e,t,r),this._client.jsonRequest(O.PUT,e,r,t)}
-static async deleteJson(e,t,r){return bs.debug(".deleteJson: ",e,r,t),this._client.jsonRequest(O.DELETE,e,t,r)}
-static _initClient(){if(cs)return bs.debug("Detected browser environment"),new ms(window.fetch.bind(window));if(ls
-)return new gs(vs,ys);throw new TypeError("Could not detect request client implementation")}}o(_s,"_client",
+static async postJson(e,t,r){return ys.debug(".postJson: ",e,t,r),this._client.jsonRequest(O.POST,e,r,t)}
+static async patchJson(e,t,r){return ys.debug(".patchJson: ",e,t,r),this._client.jsonRequest(O.PATCH,e,r,t)}
+static async putJson(e,t,r){return ys.debug(".putJson: ",e,t,r),this._client.jsonRequest(O.PUT,e,r,t)}
+static async deleteJson(e,t,r){return ys.debug(".deleteJson: ",e,r,t),this._client.jsonRequest(O.DELETE,e,t,r)}
+static _initClient(){if(cs)return ys.debug("Detected browser environment"),new ms(window.fetch.bind(window));if(ls
+)return new gs(vs,bs);throw new TypeError("Could not detect request client implementation")}}o(_s,"_client",
 _s._initClient()),Xo={OK:0,0:"OK",ERROR:1,1:"ERROR",HELP:2,2:"HELP",VERSION:3,3:"VERSION"};const Es=ns.createLogger(
 "Headers");class Os{static setLogLevel(e){Es.setLogLevel(e)}constructor(e){o(this,"_value",void 0),o(this,
 "_uninitializedValue",void 0),this._value=void 0,this._uninitializedValue=e}_initializeValue(){var t=this._value,
@@ -520,7 +521,7 @@ l=Object.getOwnPropertyDescriptor(l,s),void 0!==c&&!c.configurable&&(
 c.writable!==l.writable||c.enumerable!==l.enumerable||c.configurable!==l.configurable||!c.writable&&c.value!==l.value
 )&&u||Object.defineProperty(e,s,l));return d=p,(f=Object.getPrototypeOf(h))!==Object.getPrototypeOf(d
 )&&Object.setPrototypeOf(d,f),d=p,f=h,m=""===m?"":`with ${m.trim()}() `,m=((e,t)=>`/* Wrapped ${e}*/
-`+t).bind(null,m,f.toString()),Object.defineProperty(m,"name",Ws),Object.defineProperty(d,"toString",y(y({},Hs),{},{
+`+t).bind(null,m,f.toString()),Object.defineProperty(m,"name",Ws),Object.defineProperty(d,"toString",b(b({},Hs),{},{
 value:m})),Js.set(n,o),n},Xs=(Ks.callCount=e=>{if(Js.has(e))return Js.get(e);throw new Error(
 `The given function \`${e.name}\` is not wrapped by the \`onetime\` package`)},34),Qs=[{name:"SIGHUP",number:1,
 action:"terminate",description:"Terminal closed",standard:"posix"},{name:"SIGINT",number:2,action:"terminate",
@@ -558,50 +559,50 @@ description:"Watched event",standard:"other"},{name:"SIGINFO",number:29,action:"
 description:"Request for process information",standard:"other"},{name:"SIGPWR",number:30,action:"terminate",
 description:"Device running out of power",standard:"systemv"},{name:"SIGSYS",number:31,action:"core",
 description:"Invalid system call",standard:"other"},{name:"SIGUNUSED",number:31,action:"terminate",
-description:"Invalid system call",standard:"other"}],Ys=function(){const e=ye();return e.reduce(be,{})}();{const Ru=ye()
+description:"Invalid system call",standard:"other"}],Ys=function(){const e=be();return e.reduce(ye,{})}();{const Ru=be()
 T=Array.from({length:65},(e,t)=>{var r,n=Ru,i=(r=t,void 0!==(i=n.find(({name:e})=>Ma.constants.signals[e]===r)
 )?i:n.find(e=>e.number===r));if(void 0===i)return{};var{name:n,description:i,supported:o,action:a,forced:s,standard:u}=i
 return{[t]:{name:n,number:t,description:i,supported:o,action:a,forced:s,standard:u}}}),Object.assign({},...T)}const Zs=(
 {stdout:e,stderr:t,all:r,error:n,signal:i,exitCode:o,command:a,escapedCommand:s,timedOut:u,isCanceled:c,killed:l,
-parsed:{options:{timeout:d}}})=>{var f,p,h,g,m,v,y;o=null===o?void 0:o,f=void 0===(i=null===i?void 0:i
+parsed:{options:{timeout:d}}})=>{var f,p,h,g,m,v,b;o=null===o?void 0:o,f=void 0===(i=null===i?void 0:i
 )?void 0:Ys[i].description,d=`Command ${{timedOut:d,timeout:p,errorCode:h,signal:g,signalDescription:m,exitCode:v,
-isCanceled:y}={timedOut:u,timeout:d,errorCode:n&&n.code,signal:i,signalDescription:f,exitCode:o,isCanceled:c},
-d?`timed out after ${p} milliseconds`:y?"was canceled":void 0!==h?"failed with "+h:void 0!==g?`was killed with ${g} (${m})`:void 0!==v?"failed with exit code "+v:"failed"}: `+a
-const b=(p="[object Error]"===Object.prototype.toString.call(n))?d+`
-`+n.message:d;return y=[b,t,e].filter(Boolean).join("\n"),p?(n.originalMessage=n.message,n.message=y):n=new Error(y),
-n.shortMessage=b,n.command=a,n.escapedCommand=s,n.exitCode=o,n.signal=i,n.signalDescription=f,n.stdout=e,n.stderr=t,
+isCanceled:b}={timedOut:u,timeout:d,errorCode:n&&n.code,signal:i,signalDescription:f,exitCode:o,isCanceled:c},
+d?`timed out after ${p} milliseconds`:b?"was canceled":void 0!==h?"failed with "+h:void 0!==g?`was killed with ${g} (${m})`:void 0!==v?"failed with exit code "+v:"failed"}: `+a
+const y=(p="[object Error]"===Object.prototype.toString.call(n))?d+`
+`+n.message:d;return b=[y,t,e].filter(Boolean).join("\n"),p?(n.originalMessage=n.message,n.message=b):n=new Error(b),
+n.shortMessage=y,n.command=a,n.escapedCommand=s,n.exitCode=o,n.signal=i,n.signalDescription=f,n.stdout=e,n.stderr=t,
 void 0!==r&&(n.all=r),"bufferedData"in n&&delete n.bufferedData,n.failed=!0,n.timedOut=Boolean(u),n.isCanceled=c,
 n.killed=l&&!u,n},eu=["stdin","stdout","stderr"],tu=t=>{var r,e;if(t){const n=t.stdio;if(void 0===n)return eu.map(
 e=>t[e]);if(r=t,eu.some(e=>void 0!==r[e]))throw new Error(
 "It's not possible to provide `stdio` in combination with one of "+eu.map(e=>`\`${e}\``).join(", "));if(
 "string"==typeof n)return n;if(Array.isArray(n))return e=Math.max(n.length,eu.length),Array.from({length:e},(e,t)=>n[t])
-throw new TypeError(`Expected \`stdio\` to be of type \`string\` or \`Array\`, got \`${typeof n}\``)}},ru=(b={exports:{}
+throw new TypeError(`Expected \`stdio\` to be of type \`string\` or \`Array\`, got \`${typeof n}\``)}},ru=(y={exports:{}
 },(R=h={exports:{}}).exports=["SIGABRT","SIGALRM","SIGHUP","SIGINT","SIGTERM"],
 "win32"!==process.platform&&R.exports.push("SIGVTALRM","SIGXCPU","SIGXFSZ","SIGUSR2","SIGTRAP","SIGSYS","SIGQUIT",
 "SIGIOT"),"linux"===process.platform&&R.exports.push("SIGIO","SIGPOLL","SIGPWR","SIGSTKFLT","SIGUNUSED"),_e(g=Ka.process
 )?(ta=Ia.default,ra=h.exports,na=/^win/i.test(g.platform),"function"!=typeof(S=La.default)&&(S=S.EventEmitter),
 g.__signal_exit_emitter__?m=g.__signal_exit_emitter__:((m=g.__signal_exit_emitter__=new S).count=0,m.emitted={}),
-m.infinite||(m.setMaxListeners(1/0),m.infinite=!0),b.exports=function(e,t){var r;return _e(Ka.process)?(ta.equal(
+m.infinite||(m.setMaxListeners(1/0),m.infinite=!0),y.exports=function(e,t){var r;return _e(Ka.process)?(ta.equal(
 typeof e,"function","a callback must be provided for exit handler"),!1===sa&&ua(),r="exit",t&&t.alwaysLast&&(
 r="afterexit"),t=function(){m.removeListener(r,e),0===m.listeners("exit").length&&0===m.listeners("afterexit"
 ).length&&ia()},m.on(r,e),t):function(){}},ia=function(){sa&&_e(Ka.process)&&(sa=!1,ra.forEach(function(e){try{
-g.removeListener(e,aa[e])}catch(e){}}),g.emit=da,g.reallyExit=ca,--m.count)},b.exports.unload=ia,oa=function(e,t,r){
+g.removeListener(e,aa[e])}catch(e){}}),g.emit=da,g.reallyExit=ca,--m.count)},y.exports.unload=ia,oa=function(e,t,r){
 m.emitted[e]||(m.emitted[e]=!0,m.emit(e,t,r))},aa={},ra.forEach(function(e){aa[e]=function(){_e(Ka.process
 )&&g.listeners(e).length===m.count&&(ia(),oa("exit",null,e),oa("afterexit",null,e),na&&"SIGHUP"===e&&(e="SIGINT"),
-g.kill(g.pid,e))}}),b.exports.signals=function(){return ra},sa=!1,ua=function(){!sa&&_e(Ka.process)&&(sa=!0,m.count+=1,
-ra=ra.filter(function(e){try{return g.on(e,aa[e]),!0}catch(e){return!1}}),g.emit=fa,g.reallyExit=la)},b.exports.load=ua,
+g.kill(g.pid,e))}}),y.exports.signals=function(){return ra},sa=!1,ua=function(){!sa&&_e(Ka.process)&&(sa=!0,m.count+=1,
+ra=ra.filter(function(e){try{return g.on(e,aa[e]),!0}catch(e){return!1}}),g.emit=fa,g.reallyExit=la)},y.exports.load=ua,
 ca=g.reallyExit,la=function(e){_e(Ka.process)&&(g.exitCode=e||0,oa("exit",g.exitCode,null),oa("afterexit",g.exitCode,
 null),ca.call(g,g.exitCode))},da=g.emit,fa=function(e,t){return"exit"===e&&_e(Ka.process)?(void 0!==t&&(g.exitCode=t),
 e=da.apply(this,arguments),oa("exit",g.exitCode,null),oa("afterexit",g.exitCode,null),e):da.apply(this,arguments)}
-):b.exports=function(){return function(){}},pa=b.exports,(e,t,r,n)=>{var i;if([t,n,i]=[t,r.forceKillAfterTimeout,n],(
+):y.exports=function(){return function(){}},pa=y.exports,(e,t,r,n)=>{var i;if([t,n,i]=[t,r.forceKillAfterTimeout,n],(
 t===Ja.default.constants.signals.SIGTERM||"string"==typeof t&&"SIGTERM"===t.toUpperCase())&&!1!==n&&i){t=(({
 forceKillAfterTimeout:e=!0})=>{if(!0===e)return 5e3;if(!Number.isFinite(e)||e<0)throw new TypeError(
 `Expected the \`forceKillAfterTimeout\` option to be a non-negative integer, got \`${e}\` (${typeof e})`);return e})(r);
 const o=setTimeout(()=>{e("SIGKILL")},t);o.unref&&o.unref()}}),nu=(e,t,r)=>{e.kill(t),r(Object.assign(new Error(
 "Timed out"),{timedOut:!0,signal:t}))},iu=(j={exports:{}},Ua.default.PassThrough),ou=Ga.default.constants,au=(
 P=Ua.default,Fa.default.promisify),su=au(P.pipeline);class uu extends Error{constructor(){super("maxBuffer exceeded"),
-this.name="MaxBufferError"}}j.exports=fe,j.exports.buffer=(e,t)=>fe(e,y(y({},t),{},{encoding:"buffer"})),
-j.exports.array=(e,t)=>fe(e,y(y({},t),{},{array:!0})),j.exports.MaxBufferError=uu,ha=j.exports;
+this.name="MaxBufferError"}}j.exports=fe,j.exports.buffer=(e,t)=>fe(e,b(b({},t),{},{encoding:"buffer"})),
+j.exports.array=(e,t)=>fe(e,b(b({},t),{},{array:!0})),j.exports.MaxBufferError=uu,ha=j.exports;
 const cu=Ua.default.PassThrough,lu=(ga=function(){function t(e){return Array.isArray(e)?e.forEach(t):(n.push(e),e.once(
 "end",r.bind(null,e)),e.once("error",i.emit.bind(i,"error")),e.pipe(i,{end:!1})),this}function r(t){!(n=n.filter(
 function(e){return e!==t})).length&&i.readable&&i.end()}var n=[],i=new cu({objectMode:!0});return i.setMaxListeners(0),
@@ -610,13 +611,13 @@ async(e,t)=>{if(e){e.destroy();try{return await t}catch(e){return e.bufferedData
 maxBuffer:n})=>{if(e&&r)return t?ha(e,{encoding:t,maxBuffer:n}):ha.buffer(e,{maxBuffer:n})},fu=(async()=>{})(
 ).constructor.prototype,pu=["then","catch","finally"].map(e=>[e,Reflect.getOwnPropertyDescriptor(fu,e)]),hu=(e,t)=>{for(
 const[n,i]of pu){var r="function"==typeof t?(...e)=>Reflect.apply(i.value,t(),e):i.value.bind(t);Reflect.defineProperty(
-e,n,y(y({},i),{},{value:r}))}return e},gu=(e,t=[])=>Array.isArray(t)?[e,...t]:[e],mu=/^[\w.-]+$/,vu=/"/g,
-yu=e=>"string"!=typeof e||mu.test(e)?e:`"${e.replace(vu,'\\"')}"`,bu=1e8,_u=({env:r,extendEnv:n,preferLocal:i,
-localDir:o,execPath:a})=>{if(n=n?y(y({},Ha.default.env),r):r,i){let{env:e=Ha.default.env}=r={env:n,cwd:o,execPath:a},
+e,n,b(b({},i),{},{value:r}))}return e},gu=(e,t=[])=>Array.isArray(t)?[e,...t]:[e],mu=/^[\w.-]+$/,vu=/"/g,
+bu=e=>"string"!=typeof e||mu.test(e)?e:`"${e.replace(vu,'\\"')}"`,yu=1e8,_u=({env:r,extendEnv:n,preferLocal:i,
+localDir:o,execPath:a})=>{if(n=n?b(b({},Ha.default.env),r):r,i){let{env:e=Ha.default.env}=r={env:n,cwd:o,execPath:a},
 t=function(e,t){var r,n,i,o;if(null==e)return{};if(r=function(e,t){var r,n,i,o;if(null==e)return{};for(r={},
 n=Object.keys(e),o=0;o<n.length;o++)i=n[o],0<=t.indexOf(i)||(r[i]=e[i]);return r}(e,t),Object.getOwnPropertySymbols)for(
 o=Object.getOwnPropertySymbols(e),i=0;i<o.length;i++)n=o[i],0<=t.indexOf(n)||Object.prototype.propertyIsEnumerable.call(
-e,n)&&(r[n]=e[n]);return r}(r,Vs);return i=de({env:e=y({},e)}),t.path=e[i],e[i]=function(e={}){const{
+e,n)&&(r[n]=e[n]);return r}(r,Vs);return i=de({env:e=b({},e)}),t.path=e[i],e[i]=function(e={}){const{
 cwd:t=Ha.default.cwd(),path:r=Ha.default.env[de()],execPath:n=Ha.default.execPath}=e;let i,o=(
 e=t instanceof URL?Wa.default.fileURLToPath(t):t,$a.default.resolve(e));const a=[];for(;i!==o;)a.push($a.default.join(o,
 "node_modules/.bin")),i=o,o=$a.default.resolve(o,"..");return a.push($a.default.resolve(e,n,"..")),[...a,r].join(
@@ -690,19 +691,20 @@ var r,n=t,i="https://"+function(){const[e,t]=n.toLowerCase().split(".").slice(0,
 r)?i[r]:void 0,G.debug("getGitOrganization: packageMetadata = ",e),e&&Q(e)&&To(e,wu)&&(t=e[wu],G.debug(
 "getGitOrganization: scope: githubOrgName = ",t),H(t))?t:To(i,wu)&&(r=i[wu],G.debug(
 "getGitOrganization: root: githubOrgName = ",r),H(r))?r:void 0)}}(e);if(!t)throw new TypeError(
-"No Github organization configured for: "+e);const r=ss+`:${t}/`+e;return G.debug(`getGitUrl: github with org "${t}": `,
-r),{gitUrl:r,packageName:e}}(e);if(!a)throw new TypeError(`Could not detect git url for: "${a}"`);G.debug(
-"updateSubModule: gitUrl = ",a),G.debug("updateSubModule: packageName = ",s),t=t||ka.default.resolve(ka.default.resolve(
-o,"src"),s.split(".").join("/")),e=ka.default.relative(process.cwd(),t),G.debug("relativeTargetPath = ",e);let u;try{
-u=await xa.promises.stat(t),G.debug("stats: ",u)}catch(e){"ENOENT"!==(null==e?void 0:e.code)&&G.error(
-"File stat error: ",t,e),u=void 0}if(i=null!=(i=null==(i=u)?void 0:i.isFile())&&i,G.debug("isFile: ",i),n=null!=(
-n=null==(n=u)?void 0:n.isDirectory())&&n,G.debug("isDirectory: ",n),n)G.debug(
-"Target directory already exists, we'll only update: ",t),await ge(e);else{if(void 0!==u&&void 0!==i)return G.error(
-"Target file not a directory: ",t),Ho.CONFLICT;n=a,i=e,G.debug("addGitSubModule: ",n,i),await pe([us,"submodule","add",n
-,i]),await Ho.OK,G.debug("Initialized: ",a,e)}return n=null!=r?r:"main",G.debug("nextBranch: ",n),i=e,G.debug(
-"getGitBranch: ",i),r=(await pe([us,"rev-parse","--abbrev-ref","HEAD"],{cwd:i,stdio:"pipe"})).stdout,G.debug("stdout: ",
-r),i=await r,G.debug("currentBranch: ",i),i!==n?(r=e,i=n,G.debug("setGitSubModuleBranch: ",r,i),await me(r,"branch",i)
-):G.debug("Branch already identical: ",n),r=e,i=a,G.debug("setGitSubModuleUrl: ",r,i),await me(r,"url",i),await he(t),
-console.info(s+`@${n}:`+e),Ho.OK}(t,e,r)}(o);case"r":case"remove":return o,await Ho.UNIMPLEMENTED_FEATURE}
-return Ho.UNKNOWN_ARGUMENT}catch(e){return G.error("Fatal error: ",e),Ho.FATAL_ERROR}}(process.argv).then(e=>{
-process.exit(e)}).catch(e=>{console.error("Error: ",e),process.exit(1)});
+"No Github organization configured for: "+e);const r=ss+`:${t}/${e}.git`;return G.debug(
+`getGitUrl: github with org "${t}": `,r),{gitUrl:r,packageName:e}}(e);if(!a)throw new TypeError(
+`Could not detect git url for: "${a}"`);G.debug("updateSubModule: gitUrl = ",a),G.debug(
+"updateSubModule: packageName = ",s),t=t||ka.default.resolve(ka.default.resolve(o,"src"),s.split(".").join("/")),
+e=ka.default.relative(process.cwd(),t),G.debug("relativeTargetPath = ",e);let u;try{u=await xa.promises.stat(t),G.debug(
+"stats: ",u)}catch(e){"ENOENT"!==(null==e?void 0:e.code)&&G.error("File stat error: ",t,e),u=void 0}if(i=null!=(
+i=null==(i=u)?void 0:i.isFile())&&i,G.debug("isFile: ",i),n=null!=(n=null==(n=u)?void 0:n.isDirectory())&&n,G.debug(
+"isDirectory: ",n),n)G.debug("Target directory already exists, we'll only update: ",t),await ge(e);else{if(
+void 0!==u&&void 0!==i)return G.error("Target file not a directory: ",t),Ho.CONFLICT;n=a,i=e,G.debug("addGitSubModule: "
+,n,i),await pe([us,"submodule","add",n,i]),await Ho.OK,G.debug("Initialized: ",a,e)}return n=null!=r?r:"main",G.debug(
+"nextBranch: ",n),i=e,G.debug("getGitBranch: ",i),r=(await pe([us,"rev-parse","--abbrev-ref","HEAD"],{cwd:i,stdio:"pipe"
+})).stdout,G.debug("stdout: ",r),i=await r,G.debug("currentBranch: ",i),i!==n?(r=e,i=n,G.debug("setGitSubModuleBranch: "
+,r,i),await me(r,"branch",i)):G.debug("Branch already identical: ",n),r=e,i=a,G.debug("setGitSubModuleUrl: ",r,i),
+await me(r,"url",i),i=r=e,G.debug("setGitSubModuleUrl: ",r,i),await me(r,"path",i),await he(t),console.info(s+`@${n}:`+e
+),Ho.OK}(t,e,r)}(o);case"r":case"remove":return o,await Ho.UNIMPLEMENTED_FEATURE}return Ho.UNKNOWN_ARGUMENT}catch(e){
+return G.error("Fatal error: ",e),Ho.FATAL_ERROR}}(process.argv).then(e=>{process.exit(e)}).catch(e=>{console.error(
+"Error: ",e),process.exit(1)});
