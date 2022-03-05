@@ -18,11 +18,17 @@ npm i -g @heusalagroup/hgm
 hgm update fi.hg.core
 ```
 
-### Install as a git submodule to ./fi/hg/core
+This is essentially same as following raw commands:
 
-```shell
-hgm update fi.hg.core fi/hg/core
 ```
+mkdir -p src/fi/hg
+git submodule add git@github.com:heusalagroup/fi.hg.core.git src/fi/hg/core
+git config -f .gitmodules submodule.src/fi/hg/core.branch main
+```
+
+...except it can detect state and only updates what is changed.
+
+The `hgm install` is same as `hgm update`.
 
 ### Update all local git submodules
 
