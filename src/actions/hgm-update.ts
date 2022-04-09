@@ -8,7 +8,7 @@ import { LogService } from "../fi/hg/core/LogService";
 import { gitPullWithRecurseSubmodules } from "../core/git/git-pull";
 import { gitSubmoduleUpdateWithInit } from "../core/git/git-submodule-update";
 import { addGitSubModule } from "../core/git/git-submodule-add";
-import { getGitBranch } from "../core/git/get-branch";
+import { getGitBranch } from "../core/git/get-git-branch";
 import { setGitSubModuleBranch, setGitSubModulePath, setGitSubModuleUrl } from "../core/git/git-config";
 
 import { getPathFromPackageName, getProjectDir, parseGitUrl } from "../utils/git-url";
@@ -18,9 +18,8 @@ const LOG = LogService.createLogger('update');
 export async function hgmUpdate (freeArgs: string[]): Promise<CommandExitStatus> {
 
     const sourceUrl: string | undefined = freeArgs.shift();
-
     if ( !sourceUrl ) {
-        return await hgmUpdateAll(process.cwd(), freeArgs);
+        return await hgmUpdateAll(getProjectDir(), freeArgs);
     }
 
     const targetPath: string | undefined = freeArgs.shift();
@@ -64,7 +63,7 @@ export async function updateSubModule (
         targetPath = pathResolve(pathResolve(projectDir, DEFAULT_SOURCE_DIRECTORY), getPathFromPackageName(packageName) );
     }
 
-    const relativeTargetPath = pathRelative(process.cwd(), targetPath);
+    const relativeTargetPath = pathRelative(getProjectDir(), targetPath);
     LOG.debug(`relativeTargetPath = `, relativeTargetPath);
 
     let stats: Stats | undefined;
