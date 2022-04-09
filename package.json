@@ -1,6 +1,6 @@
 {
   "name": "@heusalagroup/hgm",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "hgm -- Package Manager for Git SubModules",
   "main": "./dist/hgm.js",
   "scripts": {
