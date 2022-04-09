@@ -1,7 +1,7 @@
 // Copyright (c) 2022. Heusala Group Oy <info@heusalagroup.fi>. All rights reserved.
 
 import { execa, Options } from "execa";
-import LogService from "./fi/hg/core/LogService";
+import { LogService } from "../fi/hg/core/LogService";
 
 const LOG = LogService.createLogger('doExec');
 
