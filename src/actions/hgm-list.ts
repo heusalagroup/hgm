@@ -6,9 +6,11 @@ import { getGitSubModuleList, SubModuleListItem } from "../core/git/git-config";
 import { forEach } from "../fi/hg/core/modules/lodash";
 
 export async function hgmList (freeArgs: string[]): Promise<CommandExitStatus> {
+    let deepness = 0;
     const projectDir = getProjectDir();
     const list : SubModuleListItem[] = await getGitSubModuleList(projectDir);
-    forEach(list, (item: SubModuleListItem) => {
+
+    const doStep = (item: SubModuleListItem) => {
 
         let pathInfo : string = '';
         if (item.path !== item?.configPath) {
@@ -37,8 +39,21 @@ export async function hgmList (freeArgs: string[]): Promise<CommandExitStatus> {
             }
         }
 
-        console.info(`${item.packageName}@${item.branch}${branchInfo}${urlInfo}${pathInfo}`);
+        if (deepness >= 1) {
+            console.info(`${' '.repeat(deepness) + '* '}${item.packageName}@${item.branch}${branchInfo}${urlInfo}${pathInfo}`);
+        } else {
+            console.info(`${item.packageName}@${item.branch}${branchInfo}${urlInfo}${pathInfo}`);
+        }
 
-    });
+        if (item.children.length) {
+            deepness += 1;
+            forEach(item.children, doStep);
+            deepness -= 1;
+        }
+
+    };
+
+    forEach(list, doStep);
+
     return CommandExitStatus.OK;
 }

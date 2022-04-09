@@ -31,3 +31,27 @@ export async function gitPullWithRecurseSubmodules (
 
     return CommandExitStatus.OK;
 }
+
+export async function gitPull (
+    dir: string
+): Promise<CommandExitStatus> {
+
+    LOG.debug(`gitPull`, dir);
+    const {stdout, stderr} = await doExec(
+        [ DEFAULT_GIT_COMMAND, 'pull' ],
+        {
+            cwd: dir,
+            stdio: "pipe"
+        }
+    );
+
+    if ( stderr ) {
+        LOG.error(`${dir}: 'git pull' with errors (inside "${dir}"): ${trim(stderr)}`);
+    }
+
+    if ( !stdout.includes("Already up to date.") ) {
+        LOG.debug(`${dir}: 'git pull' with output (inside "${dir}"): ${trim(stdout)}`);
+    }
+
+    return CommandExitStatus.OK;
+}

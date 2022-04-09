@@ -4,11 +4,12 @@ import { DEFAULT_GIT_COMMAND, DEFAULT_GIT_MODULES_FILE_NAME, DEFAULT_SOURCE_DIRE
 import { CommandExitStatus } from "../../fi/hg/core/cmd/types/CommandExitStatus";
 import { doExec } from "../doExec";
 import { LogService } from "../../fi/hg/core/LogService";
-import { endsWith, filter, find, isString, map, reduce, startsWith, uniq, values } from "../../fi/hg/core/modules/lodash";
-import { resolve as pathResolve } from "path";
+import { endsWith, filter, find, isString, map, reduce, startsWith, uniq } from "../../fi/hg/core/modules/lodash";
+import { resolve as pathResolve, join as pathJoin } from "path";
 import { getPackageNameFromPath } from "../../utils/git-url";
 import { getGitBranch } from "./get-git-branch";
 import { getGitUrl } from "./get-git-url";
+import { fileExists } from "../fs/file-exists";
 
 const LOG = LogService.createLogger('git-config');
 
@@ -65,6 +66,7 @@ export async function setGitSubModuleConfigByKey (
     value: string
 ): Promise<CommandExitStatus> {
     LOG.debug(`setGitSubModuleConfigByKey: `, targetPath, key, value);
+    if (startsWith(key, '/')) throw new TypeError(`Cannot set ${targetPath} globally as "${key}"`);
     await doExec([ DEFAULT_GIT_COMMAND, 'config', '-f', DEFAULT_GIT_MODULES_FILE_NAME, key, value ]);
     return CommandExitStatus.OK;
 }
@@ -85,6 +87,7 @@ export async function setGitSubModuleConfigBySubKey (
     value: string
 ): Promise<CommandExitStatus> {
     LOG.debug(`setGitSubModuleConfigBySubKey: `, targetPath, key, value);
+    if (startsWith(targetPath, '/')) throw new TypeError(`Cannot set ${key} using absolute target url: "${targetPath}"`);
     const fullKey = `submodule.${targetPath}.${key}`;
     return await setGitSubModuleConfigByKey(targetPath, fullKey, value);
 }
@@ -165,6 +168,11 @@ export interface SubModuleListItem {
      * This is the git url on the .gitmodule configuration (e.g. `git@github.com:heusalagroup/fi.hg.core.git`)
      */
     readonly configUrl?: string;
+
+    /**
+     * Any submodules this module might have
+     */
+    readonly children : SubModuleListItem[];
 
 }
 
@@ -251,6 +259,10 @@ export async function getGitSubModuleList (
 
     LOG.debug(`getGitSubModuleList: `, targetPath);
 
+    if (!await fileExists(pathJoin(targetPath, DEFAULT_GIT_MODULES_FILE_NAME))) {
+        return [];
+    }
+
     const output = await getGitSubModuleConfigList(targetPath, '^submodule\\.');
 
     const rows: SubModuleConfigItem[] = parseSubModuleConfigItemList(output);
@@ -282,6 +294,8 @@ export async function getGitSubModuleList (
             const branch = await getGitBranch(fullItemPath);
             const url = await getGitUrl(fullItemPath, 'origin');
 
+            const children = await getGitSubModuleList(itemPath);
+
             prevList.push({
                 key: configKey,
                 path: itemPath,
@@ -290,7 +304,8 @@ export async function getGitSubModuleList (
                 url,
                 configPath,
                 configBranch,
-                configUrl
+                configUrl,
+                children
             });
 
             return prevList;

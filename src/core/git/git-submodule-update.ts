@@ -8,7 +8,13 @@ import { LogService } from "../../fi/hg/core/LogService";
 const LOG = LogService.createLogger('git-submodule-update');
 
 export async function gitSubmoduleUpdateWithInit (dir: string): Promise<CommandExitStatus> {
-    LOG.debug(`gitSubmoduleUpdate`);
+    LOG.debug(`gitSubmoduleUpdateWithInit`);
     await doExec([ DEFAULT_GIT_COMMAND, 'submodule', 'update', '--init', '--recursive' ], {cwd: dir});
+    return CommandExitStatus.OK;
+}
+
+export async function gitSubmoduleUpdate (dir: string): Promise<CommandExitStatus> {
+    LOG.debug(`gitSubmoduleUpdate`);
+    await doExec([ DEFAULT_GIT_COMMAND, 'submodule', 'update', '--recursive' ], {cwd: dir});
     return CommandExitStatus.OK;
 }

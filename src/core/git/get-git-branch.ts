@@ -10,16 +10,21 @@ export async function getGitBranch (
     targetPath: string
 ): Promise<string> {
     LOG.debug(`getGitBranch: `, targetPath);
-    const {stderr, stdout, exitCode} = await doExec(
-        [ DEFAULT_GIT_COMMAND, 'rev-parse', '--abbrev-ref', 'HEAD' ],
-        {
-            cwd: targetPath,
-            stdio: 'pipe'
+    try {
+        const {stderr, stdout, exitCode} = await doExec(
+            [ DEFAULT_GIT_COMMAND, 'rev-parse', '--abbrev-ref', 'HEAD' ],
+            {
+                cwd: targetPath,
+                stdio: 'pipe'
+            }
+        );
+        if (exitCode !== 0) {
+            throw new Error(`Exit status was ${exitCode}: ${stderr}`);
         }
-    );
-    if (exitCode !== 0) {
-        throw new Error(`Command to get git branch for "${targetPath}" failed with status ${exitCode}: ${stderr}`);
+        LOG.debug(`stdout: `, stdout);
+        return stdout;
+    } catch (err) {
+        LOG.error(`Exception: `, err);
+        throw new Error(`Command to get git branch for "${targetPath}" failed: ${err}`);
     }
-    LOG.debug(`stdout: `, stdout);
-    return stdout;
 }

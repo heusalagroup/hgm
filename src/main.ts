@@ -15,6 +15,7 @@ import { Headers } from "./fi/hg/core/request/Headers";
 import { hgmUpdate } from "./actions/hgm-update";
 import { hgmRemove } from "./actions/hgm-remove";
 import { hgmList } from "./actions/hgm-list";
+import { hgmInstall } from "./actions/hgm-install";
 
 // Must be first import to define environment variables before anything else
 ProcessUtils.initEnvFromDefaultFiles();
@@ -57,10 +58,13 @@ export async function main (
 
         switch (action.toLowerCase()) {
 
-            case 'u':
             case 'i':
-            case 'update':
+            case 'init':
             case 'install':
+                return await hgmInstall(freeArgs);
+
+            case 'u':
+            case 'update':
                 return await hgmUpdate(freeArgs);
 
             case 'r':
