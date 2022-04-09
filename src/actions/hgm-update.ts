@@ -11,9 +11,29 @@ import { addGitSubModule } from "../core/git/git-submodule-add";
 import { getGitBranch } from "../core/git/get-branch";
 import { setGitSubModuleBranch, setGitSubModulePath, setGitSubModuleUrl } from "../core/git/git-config";
 
-import { parseGitUrl } from "../utils/git-url";
+import { getPathFromPackageName, getProjectDir, parseGitUrl } from "../utils/git-url";
 
 const LOG = LogService.createLogger('update');
+
+export async function hgmUpdate (freeArgs: string[]): Promise<CommandExitStatus> {
+
+    const sourceUrl: string | undefined = freeArgs.shift();
+
+    if ( !sourceUrl ) {
+        return await hgmUpdateAll(process.cwd(), freeArgs);
+    }
+
+    const targetPath: string | undefined = freeArgs.shift();
+    const branch: string | undefined = sourceUrl.substring(1).includes('@') ? sourceUrl.substring(1).split('@').pop() : undefined;
+
+    return await updateSubModule(sourceUrl, targetPath, branch);
+
+}
+
+export async function hgmUpdateAll (dir: string, freeArgs: string[]): Promise<CommandExitStatus> {
+    // FIXME: Handle update for rest of freeArgs
+    return await initAllSubmodules(dir);
+}
 
 /**
  *
@@ -31,8 +51,7 @@ export async function updateSubModule (
 
     LOG.debug(`updateSubModule: `, sourceUrl, targetPath, branch);
 
-    // FIXME: process.cwd() should actually be same as the git base directory
-    const projectDir = process.cwd();
+    const projectDir = getProjectDir();
 
     const {gitUrl, packageName} = await parseGitUrl(sourceUrl);
     if ( !gitUrl ) {
@@ -42,7 +61,7 @@ export async function updateSubModule (
     LOG.debug(`updateSubModule: packageName = `, packageName);
 
     if ( !targetPath ) {
-        targetPath = pathResolve(pathResolve(projectDir, DEFAULT_SOURCE_DIRECTORY), packageName.split('.').join('/'));
+        targetPath = pathResolve(pathResolve(projectDir, DEFAULT_SOURCE_DIRECTORY), getPathFromPackageName(packageName) );
     }
 
     const relativeTargetPath = pathRelative(process.cwd(), targetPath);
@@ -105,29 +124,9 @@ export async function updateSubModule (
 
 }
 
-export async function hgmUpdate (freeArgs: string[]): Promise<CommandExitStatus> {
-
-    const sourceUrl: string | undefined = freeArgs.shift();
-
-    if ( !sourceUrl ) {
-        return await hgmUpdateAll(process.cwd(), freeArgs);
-    }
-
-    const targetPath: string | undefined = freeArgs.shift();
-    const branch: string | undefined = sourceUrl.substring(1).includes('@') ? sourceUrl.substring(1).split('@').pop() : undefined;
-
-    return await updateSubModule(sourceUrl, targetPath, branch);
-
-}
-
 export async function initAllSubmodules (dir: string): Promise<CommandExitStatus> {
     LOG.debug(`initAllSubmodules`);
     await gitPullWithRecurseSubmodules(dir);
     await gitSubmoduleUpdateWithInit(dir);
     return CommandExitStatus.OK;
-}
-
-export async function hgmUpdateAll (dir: string, freeArgs: string[]): Promise<CommandExitStatus> {
-    // FIXME: Handle update for rest of freeArgs
-    return await initAllSubmodules(dir);
 }

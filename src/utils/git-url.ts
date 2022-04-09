@@ -18,6 +18,22 @@ export function getWellKnownHgMetaUrlFromScope (name: string) {
 }
 
 /**
+ *
+ * @FIXME: process.cwd() should actually be same as the git base directory
+ */
+export function getProjectDir () {
+    return process.cwd();
+}
+
+export function getPathFromPackageName (name : string) : string {
+    return name.split('.').join('/');
+}
+
+export function getPackageNameFromPath (name : string) : string {
+    return name.split('/').join('.');
+}
+
+/**
  * Get the git organization name from a package name.
  *
  * This is implemented as a async method since we'll use an HTTP service.

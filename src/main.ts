@@ -12,8 +12,9 @@ import { CommandArgumentUtils } from "./fi/hg/core/cmd/utils/CommandArgumentUtil
 import { ParsedCommandArgumentStatus } from "./fi/hg/core/cmd/types/ParsedCommandArgumentStatus";
 import { Headers } from "./fi/hg/core/request/Headers";
 
-import { hgmUpdate } from "./actions/update";
-import { hgmRemove } from "./actions/remove";
+import { hgmUpdate } from "./actions/hgm-update";
+import { hgmRemove } from "./actions/hgm-remove";
+import { hgmList } from "./actions/hgm-list";
 
 // Must be first import to define environment variables before anything else
 ProcessUtils.initEnvFromDefaultFiles();
@@ -65,6 +66,10 @@ export async function main (
             case 'r':
             case 'remove':
                 return await hgmRemove(freeArgs);
+
+            case 'l':
+            case 'list':
+                return await hgmList(freeArgs);
 
         }
 
