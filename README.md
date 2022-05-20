@@ -29,8 +29,6 @@ git config -f .gitmodules submodule.src/fi/hg/core.branch main
 
 ...except it can detect current state and only execute steps which are needed.
 
-The `hgm install` is same as `hgm update`.
-
 ### Update all local git submodules
 
 ```shell
