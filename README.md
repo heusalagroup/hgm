@@ -94,3 +94,20 @@ include: [".well-known"]
   "fi.hg.github.org": "example"
 }
 ```
+
+#### Configuring user defined scopes using Nginx
+
+Let Nginx serve the JSON directly:
+
+```
+location /.well-known/fi.hg.m.json {
+  default_type application/json;
+  return 200 '{"fi.hg.github.org": "heusalagroup"}';
+}
+```
+
+### License
+
+Copyright (c) Heusala Group. All rights reserved. Licensed under the MIT License (the "[License](./LICENSE)");
+
+
