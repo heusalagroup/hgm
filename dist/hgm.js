@@ -401,7 +401,7 @@ e=e<=r?e:r),void 0!==t&&(e=t<=e?e:t)),e},Na=_a=T,Aa=Oa=rs,Pa=Ra=j,xa=function(e,
 n=e.length,n=r=void 0===r?n:Sa(Aa(r),0,n),0<=(r-=t.length)&&e.slice(r,n)==t},ja=Ge,Ia=function(t,e){return ja(e,
 function(e){return t[e]})},La=N,Ca=function(e){return null==e?[]:Ia(e,La(e))},"production".startsWith("%{"
 )&&"production".endsWith("}"),c={DEBUG:0,0:"DEBUG",INFO:1,1:"INFO",WARN:2,2:"WARN",ERROR:3,3:"ERROR",NONE:4,4:"NONE"},
-ee("0.0.4"),As=null!=(h=ee(""))?h:"hgm",as=null!=(g=ee(""))?g:"",ee("production"),ee("2022-04-09T15:32:04.209Z"),
+ee("0.0.6"),As=null!=(h=ee(""))?h:"hgm",as=null!=(g=ee(""))?g:"",ee("production"),ee("2022-06-29T09:13:15.584Z"),
 "".startsWith("%{")&&"".endsWith("}"),A=null!=(n=function(e){if(e){if(function(){switch(e){case c.DEBUG:case c.INFO:
 case c.WARN:case c.ERROR:case c.NONE:return 1;default:return}}())return e;switch(e=(""+e).toUpperCase()){case"ALL":
 case"DEBUG":return c.DEBUG;case"INFO":return c.INFO;case"WARN":case"WARNING":return c.WARN;case"ERR":case"ERROR":
